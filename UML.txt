@@ -1,0 +1,99 @@
+@startuml
+left to right direction
+skinparam linetype ortho
+
+title WeatherApp – MVC + Repository + Builder 
+
+package "API (MVC)" {
+  class WeatherController {
+      +Index(): IActionResult
+      +Search(city: string): Task<IActionResult>
+  }
+}
+
+package "Application" {
+  class WeatherService {
+      -repo: IWeatherRepository
+      -apiClient: IWeatherApiClient
+      +GetWeather(city: string): Task<WeatherData>
+  }
+}
+
+package "Infrastructure - Repository" {
+  interface IWeatherRepository <<interface>> {
+      +Get(city: string): Task<WeatherData?>
+      +Save(data: WeatherData): Task
+  }
+
+  class WeatherRepository {
+      -_context: AppDbContext
+      +Get(city: string): Task<WeatherData?>
+      +Save(data: WeatherData): Task
+  }
+}
+
+package "Infrastructure - API Client" {
+  interface IWeatherApiClient <<interface>> {
+      +FetchWeather(city: string): Task<WeatherData>
+  }
+
+  class WeatherApiClient {
+      -_client: HttpClient
+      -_builder: WeatherRequestBuilder
+      +FetchWeather(city: string): Task<WeatherData>
+  }
+
+  class WeatherRequestBuilder {
+      -_baseUrl: string
+      -_city: string
+      -_units: string
+      +WithCity(city: string): WeatherRequestBuilder
+      +WithUnits(units: string): WeatherRequestBuilder
+      +Build(apiKey: string): string
+  }
+}
+
+package "Domain" {
+  class WeatherData {
+      +Id: int
+      +City: string
+      +Temperature: double
+      +Condition: string
+      +Date: DateTime
+  }
+}
+
+' === MVC Chain ===
+WeatherController ..> WeatherService : uses
+
+' === Service Dependencies ===
+WeatherService ..> IWeatherRepository : uses
+WeatherService ..> IWeatherApiClient : uses
+WeatherService ..> WeatherData : returns
+
+' === Repository Pattern ===
+WeatherRepository ..|> IWeatherRepository
+WeatherRepository --> WeatherData : manages
+
+' === API Client Pattern ===
+WeatherApiClient ..|> IWeatherApiClient
+WeatherApiClient --> WeatherRequestBuilder : builds request
+WeatherApiClient ..> WeatherData : returns
+
+' === Notes ===
+note top of WeatherController
+MVC Pattern:
+Controller → Service → Model
+end note
+
+note right of WeatherRepository
+Repository Pattern:
+Abstraction of data access
+end note
+
+note bottom of WeatherRequestBuilder
+Builder Pattern:
+Builds complex API requests step by step
+end note
+
+@enduml
