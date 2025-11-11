@@ -1,8 +1,88 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@using WeatherInsight.Models
+@{
+    // Step 1: Set the page title so the layout renders the correct heading.
+    ViewData["Title"] = "Weather Insight";
+
+    // Step 2: Extract the latest weather snapshot supplied by the controller.
+    var latest = ViewData["LatestWeather"] as WeatherData;
+
+    // Step 3: Extract the stored history list (empty sequence if null).
+    var history = (ViewData["History"] as IEnumerable<WeatherData>) ?? Enumerable.Empty<WeatherData>();
+
+    // Step 4: Remember which city the user last queried so the form can show it.
+    var selectedCity = ViewData["SelectedCity"] as string ?? "Stockholm";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="container py-5">
+    <!-- Step 5: Present a hero section with a brief explanation. -->
+    <div class="text-center mb-5">
+        <h1 class="display-5 fw-bold">☀️🌧️G2 WeatherInsight☀️🌧️</h1>
+        <p class="lead">Fetch real-time conditions and review your recent lookups.</p>
+    </div>
+
+    <!-- Step 6: Provide a simple GET form so users can choose a city. -->
+    <form method="get" asp-controller="Home" asp-action="Index" class="row g-3 mb-4">
+        <div class="col-md-8">
+            <label for="city" class="form-label">City</label>
+            <input type="text" id="city" name="city" class="form-control" value="@selectedCity"
+                placeholder="Enter city name" />
+        </div>
+        <div class="col-md-4 d-flex align-items-end">
+            <button type="submit" class="btn btn-primary w-100">Fetch Weather</button>
+        </div>
+    </form>
+
+    <!-- Step 7: Show the most recent weather reading (or a helpful message). -->
+    <div class="card mb-4">
+        <div class="card-body">
+            @if (latest is not null)
+            {
+                <h2 class="h4 mb-3">Latest Reading for @latest.City</h2>
+                <p class="mb-1"><strong>Temperature:</strong> @latest.Temperature&deg; C</p>
+                <p class="mb-1"><strong>Condition:</strong> @latest.Condition</p>
+                <p class="text-muted mb-0"><strong>Captured:</strong> @latest.Date.ToString("yyyy-MM-dd HH:mm")</p>
+            }
+            else
+            {
+                <p class="mb-0 text-muted">No weather data available yet. Use the form above to fetch a city.</p>
+            }
+        </div>
+    </div>
+
+    <!-- Step 8: Render the persisted history in a table for quick scanning. -->
+    <div class="card">
+        <div class="card-body">
+            <h2 class="h4 mb-3">History</h2>
+            @if (history.Any())
+            {
+                <div class="table-responsive">
+                    <table class="table table-striped align-middle">
+                        <thead>
+                            <tr>
+                                <th>City</th>
+                                <th>Temperature (&deg;C)</th>
+                                <th>Condition</th>
+                                <th>Fetched At</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var entry in history)
+                            {
+                                <tr>
+                                    <td>@entry.City</td>
+                                    <td>@entry.Temperature</td>
+                                    <td>@entry.Condition</td>
+                                    <td>@entry.Date.ToString("yyyy-MM-dd HH:mm")</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <p class="mb-0 text-muted">No history yet. Weather results will show up here after your first fetch.</p>
+            }
+        </div>
+    </div>
 </div>
