@@ -13,7 +13,7 @@ namespace WeatherInsight.ApiClients
         {
             _client = client;
             _builder = builder;
-            _apiKey = config["OpenWeather:ApiKey"] ?? "";
+            _apiKey = config["OpenWeather:ApiKey"] ?? "9e73da9ebf20eec0a7ffac32508b6ba7";
         }
 
         public async Task<WeatherData?> FetchWeatherAsync(string city)

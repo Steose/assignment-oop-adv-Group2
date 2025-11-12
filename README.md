@@ -1,2 +1,66 @@
-# assignment-oop-adv-Group2
-GruppProjekt
+# WeatherInsight
+
+WeatherInsight is an ASP.NET Core MVC application that queries the OpenWeather API for current conditions, saves each lookup in SQLite, and surfaces both the latest reading and the full history through a clean Razor view.
+
+## Features
+- Search for weather by city with a simple GET form.
+- Persist every response to `weather.db` via EF Core.
+- Display the most recent reading alongside the full lookup history.
+- Typed `HttpClient` integration with graceful handling of unauthorized or malformed responses.
+
+## Tech Stack
+- .NET 9 / ASP.NET Core MVC
+- Entity Framework Core (SQLite provider)
+- Typed `HttpClient` + configuration-driven API key management
+
+## Prerequisites
+- [.NET 9 SDK](https://dotnet.microsoft.com/download)
+- An OpenWeather API key (free tier works for development)
+
+## Setup
+1. Clone the repository and move into the solution folder:
+   ```bash
+   git clone <repo-url>
+   cd assignment-oop-adv-Group2
+   ```
+2. Provide your OpenWeather API key (choose one of the options below):
+   - **User Secrets (recommended for local dev)**  
+     ```bash
+     cd WeatherInsight
+     dotnet user-secrets set OpenWeather:ApiKey YOUR_KEY
+     ```
+   - **AppSettings (quick test only)** – edit `WeatherInsight/appsettings.Development.json` and populate `OpenWeather:ApiKey`.
+3. Restore and build:
+   ```bash
+   dotnet restore WeatherInsight
+   dotnet build WeatherInsight
+   ```
+
+## Run
+```bash
+cd WeatherInsight
+dotnet run
+```
+Open the URL shown in the console (typically `https://localhost:5001`). Enter a city and submit to fetch the latest weather and update the history table.
+
+## Project Structure (highlights)
+- `WeatherInsight/Controllers` – MVC controllers (`HomeController`) that drive the views.
+- `WeatherInsight/Services` – `WeatherService` orchestrates API calls and persistence.
+- `WeatherInsight/ApiClients` – `WeatherApiClient`, `IWeatherApiClient`, and `WeatherRequestBuilder`.
+- `WeatherInsight/Data` – `AppDbContext` (EF Core DbContext).
+- `WeatherInsight/Models` – Domain entities (`WeatherData`, `ErrorViewModel`).
+- `WeatherInsight/Repositories` – Repository abstraction for persistence.
+- `WeatherInsight/Views` – Razor UI, especially `Views/Home/Index.cshtml`.
+
+## Additional Documentation
+- `DOCUMENTATION.md` – Detailed architecture, request flow, and configuration notes.
+- `reflection.md` – Summary of recent work, challenges, and follow-up ideas.
+
+## Contributing
+1. Create a feature branch from `main`.
+2. Make your changes (add tests wherever possible).
+3. Run `dotnet build` (and tests if added).
+4. Submit a pull request referencing the relevant issue.
+
+## License
+This project inherits the license terms in `LICENSE`. Review that file before distributing or modifying the software.
