@@ -29,6 +29,9 @@ builder.Services.AddScoped<WeatherService>();
 // Step 7: Add MVC controller + Razor view support required by the app UI.
 builder.Services.AddControllersWithViews();
 
+// Memory cache for the controller's communication with the weather api
+builder.Services.AddMemoryCache();
+
 // Step 8: Materialize the WebApplication with all the above configuration.
 var app = builder.Build();
 
