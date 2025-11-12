@@ -14,6 +14,9 @@ builder.Services.AddScoped<IWeatherRepository, WeatherRepository>();
 // Add services to the container
 builder.Services.AddControllersWithViews();
 
+// Memory cache for the controller's communication with the weather api
+builder.Services.AddMemoryCache();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline
