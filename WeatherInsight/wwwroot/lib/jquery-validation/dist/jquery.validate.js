@@ -685,7 +685,21 @@ $.extend( $.validator, {
 			} );
 		},
 
+		/**
+		 * Safely returns the first DOM element from a selector or element.
+		 * WARNING: Never pass untrusted strings; will only accept actual elements.
+		 */
 		clean: function( selector ) {
+			// Only operate on actual DOM elements or jQuery objects, not raw selector strings
+			if (typeof selector === "string") {
+				// Block potential unsafe HTML interpreted by jQuery
+				if (/^\s*</.test(selector)) {
+					throw new Error("Unsafe selector/HMTL string passed to plugin 'clean'. Only DOM elements allowed.");
+				}
+				// Optionally, you could limit to using .find() inside a reference element, but for backward compatibility,
+				// return null for strings
+				return null;
+			}
 			return $( selector )[ 0 ];
 		},
 
@@ -1074,6 +1088,10 @@ $.extend( $.validator, {
 		idOrName: function( element ) {
 			return this.groups[ element.name ] || ( this.checkable( element ) ? element.name : element.id || element.name );
 		},
+		/**
+		 * Returns a validation target for a given element.
+		 * Only accepts DOM elements; will not process strings as HTML.
+		 */
 
 		validationTargetFor: function( element ) {
 
@@ -1081,6 +1099,14 @@ $.extend( $.validator, {
 			if ( this.checkable( element ) ) {
 				element = this.findByName( element.name );
 			}
+			// Only accept element or jQuery objects, block strings
+			if (typeof element === "string") {
+				if (/^\s*</.test(element)) {
+					throw new Error("Unsafe argument passed to validationTargetFor; no HTML allowed.");
+				}
+				return null;
+			}
+
 
 			// Always apply ignore filter
 			return $( element ).not( this.settings.ignore )[ 0 ];
