@@ -18,7 +18,10 @@ builder.Services.AddScoped<IWeatherRepository, WeatherRepository>();
 builder.Services.AddSingleton<WeatherRequestBuilder>();
 
 // Step 5: Register the typed HttpClient so WeatherApiClient gets an HttpClient instance plus DI wiring.
-builder.Services.AddHttpClient<IWeatherApiClient, WeatherApiClient>();
+builder.Services.AddHttpClient<IWeatherApiClient, WeatherApiClient>(client =>
+{
+    client.Timeout = TimeSpan.FromSeconds(10);
+});
 
 // Step 6: Register the WeatherService so controllers can orchestrate API + database operations.
 builder.Services.AddScoped<WeatherService>();
@@ -42,6 +45,15 @@ app.UseStaticFiles();
 
 // Step 11: Enable routing + authorization middleware in the standard order.
 app.UseRouting();
+
+// Add a few conservative security headers.
+app.Use(async (context, next) =>
+{
+    context.Response.Headers.TryAdd("X-Content-Type-Options", "nosniff");
+    context.Response.Headers.TryAdd("X-Frame-Options", "DENY");
+    context.Response.Headers.TryAdd("Referrer-Policy", "no-referrer");
+    await next();
+});
 app.UseAuthorization();
 
 // Step 12: Map the default controller route (Home/Index) for incoming requests.
