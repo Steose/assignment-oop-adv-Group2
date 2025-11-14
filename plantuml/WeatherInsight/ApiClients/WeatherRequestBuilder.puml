@@ -1,0 +1,7 @@
+@startuml
+class WeatherRequestBuilder {
+    + WithCity(city:string) : WeatherRequestBuilder
+    + WithUnits(units:string) : WeatherRequestBuilder
+    + Build(apiKey:string) : string
+}
+@enduml

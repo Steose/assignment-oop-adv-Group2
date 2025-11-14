@@ -1,0 +1,7 @@
+@startuml
+class WeatherApiClient {
+    + WeatherApiClient(client:HttpClient, builder:WeatherRequestBuilder, config:IConfiguration)
+    + <<async>> FetchWeatherAsync(city:string) : Task<WeatherData?>
+}
+IWeatherApiClient <|-- WeatherApiClient
+@enduml
