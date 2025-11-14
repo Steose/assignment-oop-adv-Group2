@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 
 namespace WeatherInsight.Models
 {
+    // Source: https://github.com/Campus-Molndal-CLO25/Studiematerial/blob/main/3_advanced_oop/lectures/caching/caching_basics_marp.md#mongodb-cache-
     public class CachedWeatherData
     {
         public int Id { get; set; }
