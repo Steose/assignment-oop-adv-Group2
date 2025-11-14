@@ -416,3 +416,6 @@ FodyWeavers.xsd
 *.msix
 *.msm
 *.msp
+WeatherInsight/weather.db
+WeatherInsight/weather.db-shm
+WeatherInsight/weather.db-wal
