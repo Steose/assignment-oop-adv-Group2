@@ -20,3 +20,10 @@
 1. Add unit/integration tests around `WeatherService` using a mocked `IWeatherApiClient`.
 2. Display explicit error banners on the UI when the API returns null so users know to verify their key.
 3. Extend the domain model to capture humidity/wind or multiple providers, demonstrating the benefit of the service/repository abstraction.
+
+## Limitations & Future Enhancements
+- No client-side validation or auto-complete for city names.
+- Weather history is global; per-user filtering/authentication is not implemented.
+- Tests are absent; consider adding service-level tests with mocked `IWeatherApiClient`.
+- Improve UX by showing explicit error messages when fetches fail or when API quotas are exceeded.
+
