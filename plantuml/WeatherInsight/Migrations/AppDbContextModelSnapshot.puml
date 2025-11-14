@@ -1,5 +1,0 @@
-@startuml
-class AppDbContextModelSnapshot <<partial>> {
-}
-ModelSnapshot <|-- AppDbContextModelSnapshot
-@enduml

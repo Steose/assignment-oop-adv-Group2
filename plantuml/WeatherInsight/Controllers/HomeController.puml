@@ -1,9 +1,0 @@
-@startuml
-class HomeController {
-    + HomeController(logger:ILogger<HomeController>, weatherService:WeatherService, cache:IMemoryCache)
-    + <<async>> Index(city:string) : Task<IActionResult>
-    + Privacy() : IActionResult
-    + Error() : IActionResult
-}
-Controller <|-- HomeController
-@enduml
