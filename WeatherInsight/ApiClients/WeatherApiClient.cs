@@ -13,7 +13,11 @@ namespace WeatherInsight.ApiClients
         {
             _client = client;
             _builder = builder;
-            _apiKey = config["OpenWeather:ApiKey"] ?? "9e73da9ebf20eec0a7ffac32508b6ba7";
+            _apiKey = Environment.GetEnvironmentVariable("OPENWEATHER_API_KEY");
+            if (string.IsNullOrEmpty(_apiKey))
+            {
+                throw new InvalidOperationException("Missing OpenWeather API key. Configure 'OPENWEATHER_API_KEY' via environment variables.");
+            }
         }
 
         public async Task<WeatherData?> FetchWeatherAsync(string city)

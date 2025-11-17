@@ -8,19 +8,22 @@
 
         public WeatherRequestBuilder WithCity(string city)
         {
-            _city = city;
+            _city = city ?? string.Empty;
             return this;
         }
 
         public WeatherRequestBuilder WithUnits(string units)
         {
-            _units = units;
+            _units = units ?? "metric";
             return this;
         }
 
         public string Build(string apiKey)
         {
-            return $"{_baseUrl}?q={_city}&units={_units}&appid={apiKey}";
+            var encodedCity = Uri.EscapeDataString(_city);
+            var encodedUnits = Uri.EscapeDataString(_units);
+            var encodedKey = Uri.EscapeDataString(apiKey ?? string.Empty);
+            return $"{_baseUrl}?q={encodedCity}&units={encodedUnits}&appid={encodedKey}";
         }
     }
 }
