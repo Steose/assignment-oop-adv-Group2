@@ -33,7 +33,8 @@ WeatherInsight is an ASP.NET Core MVC application that queries the OpenWeather A
 ## Run
 ```bash
 cd WeatherInsight
-OPENWEATHER_API_KEY="<your-api-key>" dotnet run
+Linux/MAC: OPENWEATHER_API_KEY="<your-api-key>" dotnet run
+Windows: $env:OPENWEATHER_API_KEY="your_api_key" dotnet run
 ```
 Open the URL shown in the console (typically `https://localhost:5001`). Enter a city and submit to fetch the latest weather and update the history table.
 
