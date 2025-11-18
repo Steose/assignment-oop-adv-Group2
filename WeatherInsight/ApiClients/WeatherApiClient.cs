@@ -15,10 +15,10 @@ namespace WeatherInsight.ApiClients
             _client = client;
             _builder = builder;
             _cacheDb = cacheDb;
-            _apiKey = config["OpenWeather:ApiKey"] ?? string.Empty;
-            if (string.IsNullOrWhiteSpace(_apiKey))
+            _apiKey = Environment.GetEnvironmentVariable("OPENWEATHER_API_KEY");
+            if (string.IsNullOrEmpty(_apiKey))
             {
-                throw new InvalidOperationException("Missing OpenWeather API key. Configure 'OpenWeather:ApiKey' via environment variables or user secrets.");
+                throw new InvalidOperationException("Missing OpenWeather API key. Configure 'OPENWEATHER_API_KEY' via environment variables.");
             }
         }
 

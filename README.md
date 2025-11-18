@@ -23,14 +23,8 @@ WeatherInsight is an ASP.NET Core MVC application that queries the OpenWeather A
    git clone <repo-url>
    cd assignment-oop-adv-Group2
    ```
-2. Provide your OpenWeather API key (choose one of the options below):
-   - **User Secrets (recommended for local dev)**  
-     ```bash
-     cd WeatherInsight
-     dotnet user-secrets set OpenWeather:ApiKey YOUR_KEY
-     ```
-   - **AppSettings (quick test only)** – edit `WeatherInsight/appsettings.Development.json` and populate `OpenWeather:ApiKey`.
-3. Restore and build:
+
+2. Restore and build:
    ```bash
    dotnet restore WeatherInsight
    dotnet build WeatherInsight
@@ -39,7 +33,8 @@ WeatherInsight is an ASP.NET Core MVC application that queries the OpenWeather A
 ## Run
 ```bash
 cd WeatherInsight
-dotnet run
+Linux/MAC: OPENWEATHER_API_KEY="<your-api-key>" dotnet run
+Windows: $env:OPENWEATHER_API_KEY="your_api_key" dotnet run
 ```
 Open the URL shown in the console (typically `https://localhost:5001`). Enter a city and submit to fetch the latest weather and update the history table.
 
