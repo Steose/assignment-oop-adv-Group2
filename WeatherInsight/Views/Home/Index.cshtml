@@ -12,13 +12,6 @@
     // Step 4: Remember which city the user last queried so the form can show it.
     var selectedCity = ViewData["SelectedCity"] as string ?? "Stockholm";
 }
-@if (ViewBag.ErrorMessage != null)
-{
-    <div class="alert alert-warning">
-        @ViewBag.ErrorMessage
-    </div>
-}
-
 
 <div class="container py-5">
     <!-- Step 5: Present a hero section with a brief explanation. -->
