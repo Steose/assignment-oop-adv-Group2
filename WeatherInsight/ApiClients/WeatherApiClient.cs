@@ -7,14 +7,12 @@ namespace WeatherInsight.ApiClients
     {
         private readonly HttpClient _client;
         private readonly WeatherRequestBuilder _builder;
-        private CachedWeatherData _cacheDb;
         private readonly string _apiKey;
 
-        public WeatherApiClient(HttpClient client, WeatherRequestBuilder builder, IConfiguration config, CachedWeatherData cacheDb )
+        public WeatherApiClient(HttpClient client, WeatherRequestBuilder builder, IConfiguration config)
         {
             _client = client;
             _builder = builder;
-            _cacheDb = cacheDb;
             _apiKey = Environment.GetEnvironmentVariable("OPENWEATHER_API_KEY");
             if (string.IsNullOrEmpty(_apiKey))
             {
@@ -27,12 +25,6 @@ namespace WeatherInsight.ApiClients
             var url = _builder.WithCity(city).Build(_apiKey);
             var json = await _client.GetStringAsync(url);
             var obj = JsonSerializer.Deserialize<JsonElement>(json);
-
-            var cachedWeatherData = await _cacheDb.CachedWeatherData
-                .Where(m => m.City == city && m.ExpiresAt > DateTime.Now)
-                .FirstOrDefaultAsync();
-
-            if (cachedWeatherData != null) return cachedWeatherData;
 
             return new WeatherData
             {
