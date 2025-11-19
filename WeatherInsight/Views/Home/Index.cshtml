@@ -20,6 +20,13 @@
         <p class="lead">Fetch real-time conditions and review your recent lookups.</p>
     </div>
 
+    @if (ViewData["Error"] is string error)
+    {
+        <div class="alert alert-danger" role="alert">
+            @error
+        </div>
+    }
+
     <!-- Step 6: Provide a simple GET form so users can choose a city. -->
     <form method="get" asp-controller="Home" asp-action="Index" class="row g-3 mb-4">
         <div class="col-md-8">
