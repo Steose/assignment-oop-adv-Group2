@@ -57,19 +57,10 @@ Browser -> HomeController -> WeatherService -> (WeatherApiClient -> OpenWeather)
 ## Running Locally
 ```bash
 cd WeatherInsight
-dotnet restore
+dotnet OPENWEATHER_API_KEY="Your-API-Key " restore
 dotnet build
 dotnet run
 ```
 - Visit `https://localhost:5001` (or the console output URL).
 - Ensure the OpenWeather API key is configured before running; otherwise the UI shows “No weather data available”.
 
-## Error Handling & Logging
-- Unauthorized (401) API responses are caught inside `WeatherApiClient`; failures are logged and surfaced to the UI as missing data.
-- MVC default logging is configured in `appsettings*.json` (Information for app code, Warning for Microsoft.AspNetCore).
-
-## Limitations & Future Enhancements
-- No client-side validation or auto-complete for city names.
-- Weather history is global; per-user filtering/authentication is not implemented.
-- Tests are absent; consider adding service-level tests with mocked `IWeatherApiClient`.
-- Improve UX by showing explicit error messages when fetches fail or when API quotas are exceeded.
