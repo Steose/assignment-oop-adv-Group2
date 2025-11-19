@@ -6,61 +6,55 @@ using WeatherInsight.Services;
 namespace WeatherInsight.Controllers
 {
     /// <summary>
-    /// Step 1: Handle user requests for the landing pages and orchestrate weather retrieval.
+    /// Handle user requests for the landing pages and orchestrate weather retrieval.
     /// </summary>
     public class HomeController : Controller
     {
-        // Step 2: Hold onto the logger so we can emit diagnostics if needed.
         private readonly ILogger<HomeController> _logger;
-
-        // Step 3: Hold onto the WeatherService so actions can fetch/persist weather data.
         private readonly WeatherService _weatherService;
 
         public HomeController(ILogger<HomeController> logger, WeatherService weatherService)
         {
-            // Step 4: Capture the injected logger from ASP.NET Core's DI container.
             _logger = logger;
-
-            // Step 5: Capture the injected WeatherService registered earlier in Program.cs.
             _weatherService = weatherService;
         }
 
         /// <summary>
-        /// Step 6: Render the home page, optionally fetching weather for the supplied city.
+        /// Render the home page, optionally fetching weather for the supplied city.
         /// </summary>
-        public async Task<IActionResult> Index(string city = "Stockholm")
+        public async Task<IActionResult> Index(string? city)
         {
-            // Step 7: Call the service to fetch + save the latest snapshot for the requested city.
-            var latest = await _weatherService.FetchAndSaveAsync(city);
+            var normalizedCity = string.IsNullOrWhiteSpace(city) ? null : city.Trim();
+            WeatherData? latest = null;
 
-            // Step 8: Load the stored history so the view can show recent lookups.
+            if (normalizedCity is not null)
+            {
+                latest = await _weatherService.FetchAndSaveAsync(normalizedCity);
+                if (latest == null)
+                {
+                    ViewBag.ErrorMessage =
+                        "City not found. Please check the spelling.";
+                    _logger.LogWarning("Failed to fetch weather for {City}", normalizedCity);
+                }
+            }
+
             var history = await _weatherService.GetAllAsync();
 
-            // Step 9: Package the data for the Razor view using ViewData for quick prototyping.
-            ViewData["SelectedCity"] = city;
+            // Fall back to the newest stored entry if we could not fetch fresh data.
+            latest ??= history.FirstOrDefault();
+
+            ViewData["SelectedCity"] = normalizedCity ?? "Stockholm";
             ViewData["LatestWeather"] = latest;
             ViewData["History"] = history;
 
-            // Step 10: Render the Index.cshtml view with the populated ViewData payload.
             return View();
         }
 
-        /// <summary>
-        /// Step 11: Serve the privacy page (static content in this sample).
-        /// </summary>
-        public IActionResult Privacy()
-        {
-            // Step 12: The view already contains the static message, so just render it.
-            return View();
-        }
+        public IActionResult Privacy() => View();
 
-        /// <summary>
-        /// Step 13: Render the standard error page with diagnostic information.
-        /// </summary>
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
-            // Step 14: Provide the request identifier so users/devs can correlate logs.
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
     }
