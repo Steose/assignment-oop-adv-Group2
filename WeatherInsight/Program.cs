@@ -29,9 +29,6 @@ builder.Services.AddScoped<WeatherService>();
 // Step 7: Add MVC controller + Razor view support required by the app UI.
 builder.Services.AddControllersWithViews();
 
-// Memory cache for the controller's communication with the weather api
-builder.Services.AddMemoryCache();
-
 // Step 8: Materialize the WebApplication with all the above configuration.
 var app = builder.Build();
 
@@ -40,18 +37,6 @@ if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
     app.UseHsts();
-}
-else
-{
-    // DEV MODE: Log the detected API key status for debugging
-    var apiKey = builder.Configuration["OpenWeather:ApiKey"];
-    if (string.IsNullOrWhiteSpace(apiKey))
-        Console.ForegroundColor = ConsoleColor.Red;
-    else
-        Console.ForegroundColor = ConsoleColor.Green;
-
-    Console.WriteLine($"[Startup] OpenWeather API key loaded: {!string.IsNullOrWhiteSpace(apiKey)}");
-    Console.ResetColor();
 }
 
 // Step 10: Enforce HTTPS and serve static files (css/js) before hitting MVC.

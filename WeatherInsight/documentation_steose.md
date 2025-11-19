@@ -56,14 +56,7 @@ Browser -> HomeController -> WeatherService -> (WeatherApiClient -> OpenWeather)
 
 ## Running Locally
 ```bash
-cd WeatherInsight.
-
-macOS/Linux (bash/zsh):  
-export OpenWeather__ApiKey="YOUR_REAL_API_KEY_HERE"
-
-Windows (PowerShell):  
-$env:OpenWeather__ApiKey = "YOUR_REAL_API_KEY_HERE"
-
+cd WeatherInsight
 dotnet restore
 dotnet build
 dotnet run
