@@ -421,3 +421,4 @@ WeatherInsight/weather.db-shm
 WeatherInsight/weather.db-wal
 WeatherInsight/appsettings.json
 WeatherInsight/appsettings.Development.json
+/WeatherInsight/weather.db
