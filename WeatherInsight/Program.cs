@@ -29,24 +29,28 @@ builder.Services.AddScoped<WeatherService>();
 // Step 7: Add MVC controller + Razor view support required by the app UI.
 builder.Services.AddControllersWithViews();
 
-// Memory cache for the controller's communication with the weather api
-builder.Services.AddMemoryCache();
-
 // Step 8: Materialize the WebApplication with all the above configuration.
 var app = builder.Build();
 
-// Step 9: Configure production-safe error handling and HSTS when we are outside Development.
+// Step 9: Automatically apply EF Core migrations to ensure DB exists and is up-to-date.
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    db.Database.Migrate();
+}
+
+// Step 10: Configure production-safe error handling and HSTS when we are outside Development.
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
     app.UseHsts();
 }
 
-// Step 10: Enforce HTTPS and serve static files (css/js) before hitting MVC.
+// Step 11: Enforce HTTPS and serve static files (css/js) before hitting MVC.
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
-// Step 11: Enable routing + authorization middleware in the standard order.
+// Step 12: Enable routing + authorization middleware in the standard order.
 app.UseRouting();
 
 // Add a few conservative security headers.
@@ -57,12 +61,13 @@ app.Use(async (context, next) =>
     context.Response.Headers.TryAdd("Referrer-Policy", "no-referrer");
     await next();
 });
+
 app.UseAuthorization();
 
-// Step 12: Map the default controller route (Home/Index) for incoming requests.
+// Step 13: Map the default controller route (Home/Index) for incoming requests.
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
-// Step 13: Run the configured web host.
+// Step 14: Run the configured web host.
 app.Run();
