@@ -29,7 +29,6 @@ namespace WeatherInsight.ApiClients
         {
             var url = _builder.WithCity(city).Build(_apiKey);
 
-
             // Variable to hold the JSON response
             string json;
 
@@ -42,7 +41,6 @@ namespace WeatherInsight.ApiClients
                     return weatherData; 
             }
 
-            
             // Attempt to fetch the weather data
             try
             {
@@ -53,7 +51,6 @@ namespace WeatherInsight.ApiClients
                 // If it returns 404, the city was not found, throw a clear error message
                 throw new ArgumentException("City name is wrong");
             }
-
 
             var obj = JsonSerializer.Deserialize<JsonElement>(json);
             var newWeatherData = new WeatherData
@@ -66,7 +63,7 @@ namespace WeatherInsight.ApiClients
                 Date = DateTime.Now
             };
 
-            _cache.Set(cacheKey, newWeatherData, TimeSpan.FromHours(24));
+            _cache.Set(cacheKey, newWeatherData, TimeSpan.FromMinutes(15));
 
             return newWeatherData;
         }
