@@ -38,7 +38,8 @@ namespace WeatherInsight.ApiClients
             // attempt to get from cache
             if (_cache.TryGetValue(cacheKey, out WeatherData? weatherData))
             {
-                    return weatherData; // Cache hit!
+                    weatherData.Id = 0; // The program expects Id to be 0, the cached Id is already taken in the history weather.db database.
+                    return weatherData; 
             }
 
             
