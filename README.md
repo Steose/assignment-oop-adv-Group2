@@ -5,6 +5,7 @@ WeatherInsight is an ASP.NET Core MVC application that queries the OpenWeather A
 ## Features
 - Search for weather by city with a simple GET form.
 - Persist every response to `weather.db` via EF Core.
+- Also cache each response in RAM for 15 minutes.
 - Display the most recent reading alongside the full lookup history.
 - Typed `HttpClient` integration with graceful handling of unauthorized or malformed responses.
 
@@ -41,7 +42,7 @@ Open the URL shown in the console (typically `https://localhost:5001`). Enter a 
 ## Project Structure (highlights)
 - `WeatherInsight/Controllers` – MVC controllers (`HomeController`) that drive the views.
 - `WeatherInsight/Services` – `WeatherService` orchestrates API calls and persistence.
-- `WeatherInsight/ApiClients` – `WeatherApiClient`, `IWeatherApiClient`, and `WeatherRequestBuilder`.
+- `WeatherInsight/ApiClients` – `WeatherApiClient`, `IWeatherApiClient`, and `WeatherRequestBuilder` Cache the API responses in RAM.
 - `WeatherInsight/Data` – `AppDbContext` (EF Core DbContext).
 - `WeatherInsight/Models` – Domain entities (`WeatherData`, `ErrorViewModel`).
 - `WeatherInsight/Repositories` – Repository abstraction for persistence.
