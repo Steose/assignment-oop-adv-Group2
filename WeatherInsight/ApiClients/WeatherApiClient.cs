@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using System.Net;
+using System.Text.Json;
 using WeatherInsight.Models;
 
 namespace WeatherInsight.ApiClients
@@ -23,16 +24,35 @@ namespace WeatherInsight.ApiClients
         public async Task<WeatherData?> FetchWeatherAsync(string city)
         {
             var url = _builder.WithCity(city).Build(_apiKey);
-            var json = await _client.GetStringAsync(url);
+
+
+            // Variable to hold the JSON response
+            string json;
+
+            // Attempt to fetch the weather data
+            try
+            {
+                json = await _client.GetStringAsync(url);
+            }
+            catch (HttpRequestException ex) when (ex.StatusCode == HttpStatusCode.NotFound)
+            {
+                // If it returns 404, the city was not found, throw a clear error message
+                throw new ArgumentException("City name is wrong");
+            }
+
+
             var obj = JsonSerializer.Deserialize<JsonElement>(json);
 
             return new WeatherData
+
             {
+
                 City = city,
                 Temperature = obj.GetProperty("main").GetProperty("temp").GetDouble(),
                 Condition = obj.GetProperty("weather")[0].GetProperty("description").GetString() ?? "",
                 Date = DateTime.Now
             };
+
         }
     }
 }

@@ -36,7 +36,16 @@ namespace WeatherInsight.Controllers
         public async Task<IActionResult> Index(string city = "Stockholm")
         {
             // Step 7: Call the service to fetch + save the latest snapshot for the requested city.
-            var latest = await _weatherService.FetchAndSaveAsync(city);
+            WeatherData? latest = null;
+            try
+            {
+                latest = await _weatherService.FetchAndSaveAsync(city);
+            }
+            catch (ArgumentException ex) when (ex.Message == "City name is wrong")
+            {
+                _logger.LogWarning(ex, "Invalid city input: {City}", city);
+                ViewData["Error"] = ex.Message;
+            }
 
             // Step 8: Load the stored history so the view can show recent lookups.
             var history = await _weatherService.GetAllAsync();
