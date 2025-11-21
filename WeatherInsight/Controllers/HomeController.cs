@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
 using WeatherInsight.Models;
 using WeatherInsight.Services;
 
@@ -13,13 +14,17 @@ namespace WeatherInsight.Controllers
         // Step 2: Hold onto the logger so we can emit diagnostics if needed.
         private readonly ILogger<HomeController> _logger;
 
+        // Cache for the wather api, source: https://github.com/Campus-Molndal-CLO25/Studiematerial/blob/main/3_advanced_oop/lectures/caching/caching_basics_marp.md
+        private readonly IMemoryCache _cache;
+
         // Step 3: Hold onto the WeatherService so actions can fetch/persist weather data.
         private readonly WeatherService _weatherService;
 
-        public HomeController(ILogger<HomeController> logger, WeatherService weatherService)
+        public HomeController(ILogger<HomeController> logger, WeatherService weatherService, IMemoryCache cache)
         {
             // Step 4: Capture the injected logger from ASP.NET Core's DI container.
             _logger = logger;
+            _cache = cache;
 
             // Step 5: Capture the injected WeatherService registered earlier in Program.cs.
             _weatherService = weatherService;

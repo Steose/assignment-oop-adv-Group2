@@ -1,5 +1,7 @@
 ﻿using System.Net;
 using System.Text.Json;
+using Microsoft.AspNetCore.DataProtection.KeyManagement.Internal;
+using Microsoft.Extensions.Caching.Memory;
 using WeatherInsight.Models;
 
 namespace WeatherInsight.ApiClients
@@ -9,11 +11,13 @@ namespace WeatherInsight.ApiClients
         private readonly HttpClient _client;
         private readonly WeatherRequestBuilder _builder;
         private readonly string _apiKey;
+        private readonly IMemoryCache _cache;
 
-        public WeatherApiClient(HttpClient client, WeatherRequestBuilder builder, IConfiguration config)
+        public WeatherApiClient(HttpClient client, WeatherRequestBuilder builder, IConfiguration config, IMemoryCache cache)
         {
             _client = client;
             _builder = builder;
+            _cache = cache;
             _apiKey = Environment.GetEnvironmentVariable("OPENWEATHER_API_KEY");
             if (string.IsNullOrEmpty(_apiKey))
             {
@@ -25,9 +29,17 @@ namespace WeatherInsight.ApiClients
         {
             var url = _builder.WithCity(city).Build(_apiKey);
 
-
             // Variable to hold the JSON response
             string json;
+
+            var cacheKey = $"weatherdata_{city}";
+
+            // attempt to get from cache
+            if (_cache.TryGetValue(cacheKey, out WeatherData? weatherData))
+            {
+                    weatherData.Id = 0; // The program expects Id to be 0, the cached Id is already taken in the history weather.db database.
+                    return weatherData; 
+            }
 
             // Attempt to fetch the weather data
             try
@@ -40,10 +52,8 @@ namespace WeatherInsight.ApiClients
                 throw new ArgumentException("City name is wrong");
             }
 
-
             var obj = JsonSerializer.Deserialize<JsonElement>(json);
-
-            return new WeatherData
+            var newWeatherData = new WeatherData
 
             {
 
@@ -53,6 +63,9 @@ namespace WeatherInsight.ApiClients
                 Date = DateTime.Now
             };
 
+            _cache.Set(cacheKey, newWeatherData, TimeSpan.FromMinutes(15));
+
+            return newWeatherData;
         }
     }
 }
