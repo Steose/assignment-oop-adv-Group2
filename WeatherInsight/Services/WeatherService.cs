@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 using WeatherInsight.ApiClients;
 using WeatherInsight.Data;
 using WeatherInsight.Models;
@@ -16,13 +17,18 @@ public class WeatherService
     // Step 2: Cache the HTTP API client that knows how to reach OpenWeather.
     private readonly IWeatherApiClient _apiClient;
 
-    public WeatherService(AppDbContext context, IWeatherApiClient apiClient)
+    // For the memory cache of the api requests data, source: https://github.com/Campus-Molndal-CLO25/Studiematerial/blob/main/3_advanced_oop/lectures/caching/caching_basics_marp.md#memory-cache-
+    private readonly IMemoryCache _cache;
+
+    public WeatherService(AppDbContext context, IWeatherApiClient apiClient, IMemoryCache cache)
     {
         // Step 3: Capture the injected DbContext instance coming from DI.
         _context = context;
 
         // Step 4: Capture the injected API client so we can make HTTP calls later.
         _apiClient = apiClient;
+
+        _cache = cache; // For the memory cache of the api requests data
     }
 
     /// <summary>
