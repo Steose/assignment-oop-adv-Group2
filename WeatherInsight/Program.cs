@@ -3,6 +3,8 @@ using WeatherInsight.ApiClients;
 using WeatherInsight.Data;
 using WeatherInsight.Repositories;
 using WeatherInsight.Services;
+using Polly;
+using Polly.Extensions.Http;
 
 // Step 1: Bootstrap the generic ASP.NET Core builder that collects config + DI setup.
 var builder = WebApplication.CreateBuilder(args);
@@ -21,7 +23,16 @@ builder.Services.AddSingleton<WeatherRequestBuilder>();
 builder.Services.AddHttpClient<IWeatherApiClient, WeatherApiClient>(client =>
 {
     client.Timeout = TimeSpan.FromSeconds(10);
-});
+})
+// Retry 3 times with increasing wait
+.AddTransientHttpErrorPolicy(policy =>
+    policy.WaitAndRetryAsync(3, retry => TimeSpan.FromMilliseconds(300 * retry)))
+// Circuit breaker: stop flooding when API fails repeatedly
+.AddTransientHttpErrorPolicy(policy =>
+    policy.CircuitBreakerAsync(
+        handledEventsAllowedBeforeBreaking: 3,
+        durationOfBreak: TimeSpan.FromSeconds(10)
+    ));
 
 // Step 6: Register the WeatherService so controllers can orchestrate API + database operations.
 builder.Services.AddScoped<WeatherService>();
