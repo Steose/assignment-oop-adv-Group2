@@ -62,7 +62,8 @@ public class WeatherService
     {
         // Step 12: Build and execute the query that retrieves the history.
         return await _context.WeatherData
-            .OrderByDescending(w => w.Date)
-            .ToListAsync();
+         .OrderByDescending(w => w.Date)
+         .Take(10)     // Cap: max 10 search history
+         .ToListAsync();
     }
 }
