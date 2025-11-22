@@ -57,13 +57,17 @@ public class WeatherService
     }
 
     /// <summary>
-    /// Step 11: Return all saved weather entries ordered from newest to oldest.
+    /// Step 11: Return the saved weather entries ordered from newest to oldest,
+    /// capped to the 10 most recent lookups.
     /// </summary>
     public async Task<List<WeatherData>> GetAllAsync()
     {
-        // Step 12: Build and execute the query that retrieves the history.
+        // Build and execute the query that retrieves the history,
+        // ordering from most recent to oldest.
+        // Limit the results so that only the 10 latest entries are returned.
         return await _context.WeatherData
             .OrderByDescending(w => w.Date)
+            .Take(10) 
             .ToListAsync();
     }
 }
