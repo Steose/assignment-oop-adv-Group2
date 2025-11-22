@@ -10,7 +10,7 @@ namespace WeatherInsight.ApiClients
     {
         private readonly HttpClient _client;
         private readonly WeatherRequestBuilder _builder;
-        private readonly string _apiKey;
+        private readonly string? _apiKey;
         private readonly IMemoryCache _cache;
 
         public WeatherApiClient(HttpClient client, WeatherRequestBuilder builder, IConfiguration config, IMemoryCache cache)
@@ -27,7 +27,7 @@ namespace WeatherInsight.ApiClients
 
         public async Task<WeatherData?> FetchWeatherAsync(string city)
         {
-            const int  API_MEMORY_CACHE_TIME_TO_LIVE_MINUTES = 15
+            const int  API_MEMORY_CACHE_TIME_TO_LIVE_MINUTES = 15;
             var url = _builder.WithCity(city).Build(_apiKey);
 
             // Variable to hold the JSON response
