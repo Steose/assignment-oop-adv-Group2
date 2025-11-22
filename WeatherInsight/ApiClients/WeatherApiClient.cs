@@ -27,6 +27,7 @@ namespace WeatherInsight.ApiClients
 
         public async Task<WeatherData?> FetchWeatherAsync(string city)
         {
+            const int  API_MEMORY_CACHE_TIME_TO_LIVE_MINUTES = 15
             var url = _builder.WithCity(city).Build(_apiKey);
 
             // Variable to hold the JSON response
@@ -64,7 +65,7 @@ namespace WeatherInsight.ApiClients
             };
 
             // Store the newly optained weatherdata in memory cacke.
-            _cache.Set(cacheKey, newWeatherData, TimeSpan.FromMinutes(15));
+            _cache.Set(cacheKey, newWeatherData, TimeSpan.FromMinutes(API_MEMORY_CACHE_TIME_TO_LIVE_MINUTES));
 
             return newWeatherData;
         }
