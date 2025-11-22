@@ -34,11 +34,13 @@ namespace WeatherInsight.ApiClients
 
             var cacheKey = $"weatherdata_{city}";
 
-            // attempt to get from cache
-            if (_cache.TryGetValue(cacheKey, out WeatherData? weatherData))
+            // Look for weatherdata in memory cache
+            if (_cache.TryGetValue(cacheKey, out WeatherData? cachedWeatherData))
             {
-                    weatherData.Id = 0; // The program expects Id to be 0, the cached Id is already taken in the history weather.db database.
-                    return weatherData; 
+                   // The program expects the Id of new searches to be 0.
+                   //  The Id of the cached data is already taken in the search history weather.db database.
+                    cachedWeatherData.Id = 0;
+                    return cachedWeatherData;
             }
 
             // Attempt to fetch the weather data
@@ -54,15 +56,14 @@ namespace WeatherInsight.ApiClients
 
             var obj = JsonSerializer.Deserialize<JsonElement>(json);
             var newWeatherData = new WeatherData
-
             {
-
                 City = city,
                 Temperature = obj.GetProperty("main").GetProperty("temp").GetDouble(),
                 Condition = obj.GetProperty("weather")[0].GetProperty("description").GetString() ?? "",
                 Date = DateTime.Now
             };
 
+            // Store the newly optained weatherdata in memory cacke.
             _cache.Set(cacheKey, newWeatherData, TimeSpan.FromMinutes(15));
 
             return newWeatherData;
