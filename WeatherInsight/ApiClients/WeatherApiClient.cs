@@ -10,7 +10,7 @@ namespace WeatherInsight.ApiClients
     {
         private readonly HttpClient _client;
         private readonly WeatherRequestBuilder _builder;
-        private readonly string _apiKey;
+        private readonly string? _apiKey;
         private readonly IMemoryCache _cache;
 
         public WeatherApiClient(HttpClient client, WeatherRequestBuilder builder, IConfiguration config, IMemoryCache cache)
@@ -27,6 +27,7 @@ namespace WeatherInsight.ApiClients
 
         public async Task<WeatherData?> FetchWeatherAsync(string city)
         {
+            const int  API_MEMORY_CACHE_TIME_TO_LIVE_MINUTES = 15;
             var url = _builder.WithCity(city).Build(_apiKey);
 
             // Variable to hold the JSON response
@@ -34,11 +35,13 @@ namespace WeatherInsight.ApiClients
 
             var cacheKey = $"weatherdata_{city}";
 
-            // attempt to get from cache
-            if (_cache.TryGetValue(cacheKey, out WeatherData? weatherData))
+            // Look for weatherdata in memory cache
+            if (_cache.TryGetValue(cacheKey, out WeatherData? cachedWeatherData))
             {
-                    weatherData.Id = 0; // The program expects Id to be 0, the cached Id is already taken in the history weather.db database.
-                    return weatherData; 
+                   // The program expects the Id of new searches to be 0.
+                   //  The Id of the cached data is already taken in the search history weather.db database.
+                    cachedWeatherData.Id = 0;
+                    return cachedWeatherData;
             }
 
             // Attempt to fetch the weather data
@@ -54,16 +57,15 @@ namespace WeatherInsight.ApiClients
 
             var obj = JsonSerializer.Deserialize<JsonElement>(json);
             var newWeatherData = new WeatherData
-
             {
-
                 City = city,
                 Temperature = obj.GetProperty("main").GetProperty("temp").GetDouble(),
                 Condition = obj.GetProperty("weather")[0].GetProperty("description").GetString() ?? "",
                 Date = DateTime.Now
             };
 
-            _cache.Set(cacheKey, newWeatherData, TimeSpan.FromMinutes(15));
+            // Store the newly optained weatherdata in memory cacke.
+            _cache.Set(cacheKey, newWeatherData, TimeSpan.FromMinutes(API_MEMORY_CACHE_TIME_TO_LIVE_MINUTES));
 
             return newWeatherData;
         }

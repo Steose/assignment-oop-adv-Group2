@@ -22,7 +22,7 @@ namespace WeatherInsight.Controllers
 
         public HomeController(ILogger<HomeController> logger, WeatherService weatherService, IMemoryCache cache)
         {
-            // Step 4: Capture the injected logger from ASP.NET Core's DI container.
+            // Step 4: Capture the injected logger from ASP.NET Core's DI container, and the .Net's memory cache.
             _logger = logger;
             _cache = cache;
 
