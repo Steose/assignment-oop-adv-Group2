@@ -64,3 +64,10 @@ dotnet run
 - Visit `https://localhost:5001` (or the console output URL).
 - Ensure the OpenWeather API key is configured before running; otherwise the UI shows “No weather data available”.
 
+
+
+## `css_update`
+
+- Added a helper function in `WeatherInsight/Views/Home/Index.cshtml` that maps condition keywords to emojis so users get a quick visual cue alongside both the latest reading and each history row.
+- Tweaked the `.btn-primary` hover/focus styling in `Views/Shared/_Layout.cshtml.css` to keep the Fetch Weather action red (with darker shades for feedback) while maintaining white text for contrast.
+
