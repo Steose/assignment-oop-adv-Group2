@@ -18,7 +18,7 @@ namespace WeatherInsight.ApiClients
         {
             _client = client;
             _builder = builder;
-            _cacheService = cacheService;
+            _apiCacheService = apiCacheService;
             _apiKey = Environment.GetEnvironmentVariable("OPENWEATHER_API_KEY");
             if (string.IsNullOrEmpty(_apiKey))
             {

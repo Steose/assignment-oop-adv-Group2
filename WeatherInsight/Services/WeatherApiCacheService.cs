@@ -8,13 +8,13 @@ using WeatherInsight.Models;
 namespace WeatherInsight.Services
 {
     // With help from Github/Claude Haiku 4.5, https://github.com/copilot/share/423d5034-08a4-8422-8040-a84a84c64835
-    public class WeatherApiCacheService : IWeatherCacheService
+    public class WeatherApiCacheService : IWeatherApiCacheService
     {
         private readonly IMemoryCache _cache;
         private const int CACHE_TIME_TO_LIVE_MINUTES = 15;
         private const string CACHE_KEY_PREFIX = "weatherdata_";
 
-        public WeatherCacheService(IMemoryCache cache)
+        public WeatherApiCacheService(IMemoryCache cache)
         {
             _cache = cache;
         }
