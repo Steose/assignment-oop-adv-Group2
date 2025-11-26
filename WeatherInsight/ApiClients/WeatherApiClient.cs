@@ -18,7 +18,7 @@ namespace WeatherInsight.ApiClients
         {
             _client = client;
             _builder = builder;
-            _apiCache = apiCache;
+            _cacheService = cacheService;
             _apiKey = Environment.GetEnvironmentVariable("OPENWEATHER_API_KEY");
             if (string.IsNullOrEmpty(_apiKey))
             {
@@ -60,7 +60,7 @@ namespace WeatherInsight.ApiClients
             };
 
             // Store the newly obtained weatherdata in memory cacke.
-            _apiCacheService. CacheWeatherData(city, newWeatherData);
+            _apiCacheService.CacheWeatherData(city, newWeatherData);
 
             return newWeatherData;
         }

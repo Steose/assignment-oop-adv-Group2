@@ -1,0 +1,9 @@
+@startuml
+class AppDbContext {
+    + AppDbContext(options:DbContextOptions<AppDbContext>)
+}
+class "DbSet`1"<T> {
+}
+DbContext <|-- AppDbContext
+AppDbContext --> "WeatherData<WeatherData>" "DbSet`1"
+@enduml

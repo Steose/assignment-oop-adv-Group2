@@ -1,0 +1,6 @@
+@startuml
+interface IWeatherRepository {
+    GetAsync(city:string) : Task<WeatherData?>
+    SaveAsync(data:WeatherData) : Task
+}
+@enduml

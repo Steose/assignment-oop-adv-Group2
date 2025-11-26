@@ -1,0 +1,10 @@
+@startuml
+class WeatherRequestBuilder {
+    - _baseUrl : string = "https://api.openweathermap.org/data/2.5/weather"
+    - _city : string
+    - _units : string = "metric"
+    + WithCity(city:string) : WeatherRequestBuilder
+    + WithUnits(units:string) : WeatherRequestBuilder
+    + Build(apiKey:string) : string
+}
+@enduml
