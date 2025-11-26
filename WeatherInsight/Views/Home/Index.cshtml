@@ -11,6 +11,52 @@
 
     // Step 4: Remember which city the user last queried so the form can show it.
     var selectedCity = ViewData["SelectedCity"] as string ?? "Stockholm";
+
+    string GetConditionEmoji(string? condition)
+    {
+        if (string.IsNullOrWhiteSpace(condition))
+        {
+            return "🌥️";
+        }
+
+        var normalized = condition.ToLowerInvariant();
+        if (normalized.Contains("thunder") || normalized.Contains("storm"))
+        {
+            return "⛈️";
+        }
+
+        if (normalized.Contains("rain"))
+        {
+            return "🌧️";
+        }
+
+        if (normalized.Contains("snow"))
+        {
+            return "❄️";
+        }
+
+        if (normalized.Contains("cloud"))
+        {
+            return "☁️";
+        }
+
+        if (normalized.Contains("sun") || normalized.Contains("clear"))
+        {
+            return "☀️";
+        }
+
+        if (normalized.Contains("drizzle"))
+        {
+            return "🌦️";
+        }
+
+        if (normalized.Contains("mist") || normalized.Contains("fog"))
+        {
+            return "🌫️";
+        }
+
+        return "🌤️";
+    }
 }
 
 <div class="container py-5">
@@ -46,7 +92,7 @@
             {
                 <h2 class="h4 mb-3">Latest Reading for @latest.City</h2>
                 <p class="mb-1"><strong>Temperature:</strong> @latest.Temperature&deg; C</p>
-                <p class="mb-1"><strong>Condition:</strong> @latest.Condition</p>
+                <p class="mb-1"><strong>Condition:</strong> @latest.Condition @GetConditionEmoji(latest.Condition)</p>
                 <p class="text-muted mb-0"><strong>Captured:</strong> @latest.Date.ToString("yyyy-MM-dd HH:mm")</p>
             }
             else
@@ -78,7 +124,7 @@
                                 <tr>
                                     <td>@entry.City</td>
                                     <td>@entry.Temperature</td>
-                                    <td>@entry.Condition</td>
+                                    <td>@entry.Condition @GetConditionEmoji(entry.Condition)</td>
                                     <td>@entry.Date.ToString("yyyy-MM-dd HH:mm")</td>
                                 </tr>
                             }

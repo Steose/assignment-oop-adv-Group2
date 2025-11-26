@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 using WeatherInsight.ApiClients;
 using WeatherInsight.Data;
 using WeatherInsight.Models;
@@ -16,13 +17,19 @@ public class WeatherService
     // Step 2: Cache the HTTP API client that knows how to reach OpenWeather.
     private readonly IWeatherApiClient _apiClient;
 
-    public WeatherService(AppDbContext context, IWeatherApiClient apiClient)
+    //The memory cache of the api responses, source: https://github.com/Campus-Molndal-CLO25/Studiematerial/blob/main/3_advanced_oop/lectures/caching/caching_basics_marp.md#memory-cache-
+    private readonly IMemoryCache _cache;
+
+    public WeatherService(AppDbContext context, IWeatherApiClient apiClient, IMemoryCache cache)
     {
         // Step 3: Capture the injected DbContext instance coming from DI.
         _context = context;
 
         // Step 4: Capture the injected API client so we can make HTTP calls later.
         _apiClient = apiClient;
+
+        //And also the memory cache of the api responses
+        _cache = cache;
     }
 
     /// <summary>
@@ -50,13 +57,17 @@ public class WeatherService
     }
 
     /// <summary>
-    /// Step 11: Return all saved weather entries ordered from newest to oldest.
+    /// Step 11: Return the saved weather entries ordered from newest to oldest,
+    /// capped to the 10 most recent lookups.
     /// </summary>
     public async Task<List<WeatherData>> GetAllAsync()
     {
-        // Step 12: Build and execute the query that retrieves the history.
+        // Build and execute the query that retrieves the history,
+        // ordering from most recent to oldest.
+        // Limit the results so that only the 10 latest entries are returned.
         return await _context.WeatherData
             .OrderByDescending(w => w.Date)
+            .Take(10) 
             .ToListAsync();
     }
 }

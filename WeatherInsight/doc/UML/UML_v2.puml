@@ -1,0 +1,90 @@
+@startuml
+left to right direction
+skinparam linetype ortho
+skinparam packageStyle rectangle
+title WeatherInsight – Updated Dependencies (v2)
+
+package "Presentation (MVC)" {
+  class HomeController {
+    -_logger: ILogger<HomeController>
+    -_weatherService: WeatherService
+    -_cache: IMemoryCache
+    +Index(city: string = "Stockholm"): Task<IActionResult>
+    +Privacy(): IActionResult
+  }
+}
+
+package "Application Layer" {
+  class WeatherService {
+    -_context: AppDbContext
+    -_apiClient: IWeatherApiClient
+    -_cache: IMemoryCache
+    +FetchAndSaveAsync(city: string): Task<WeatherData?>
+    +GetAllAsync(): Task<List<WeatherData>>
+  }
+}
+
+package "Integration" {
+  interface IWeatherApiClient {
+    +FetchWeatherAsync(city: string): Task<WeatherData?>
+  }
+
+  class WeatherApiClient {
+    -_client: HttpClient
+    -_builder: WeatherRequestBuilder
+    -_cache: IMemoryCache
+    -_apiKey: string
+    +FetchWeatherAsync(city: string): Task<WeatherData?>
+  }
+
+  class WeatherRequestBuilder {
+    -_baseUrl: string = "https://api.openweathermap.org/data/2.5/weather"
+    -_city: string
+    -_units: string = "metric"
+    +WithCity(city: string): WeatherRequestBuilder
+    +WithUnits(units: string): WeatherRequestBuilder
+    +Build(apiKey: string): string
+  }
+}
+
+package "Persistence" {
+  class AppDbContext {
+    +WeatherData: DbSet<WeatherData>
+    +SaveChangesAsync(): Task<int>
+  }
+
+  class WeatherData {
+    +Id: int
+    +City: string
+    +Temperature: double
+    +Condition: string
+    +Date: DateTime
+  }
+}
+
+HomeController --> WeatherService : orchestrates
+WeatherService --> AppDbContext : persists history
+WeatherService --> IWeatherApiClient : fetches live data
+WeatherService --> IMemoryCache : history lookup cache
+
+WeatherApiClient ..|> IWeatherApiClient
+WeatherApiClient --> WeatherRequestBuilder : builds URL
+WeatherApiClient --> IMemoryCache : memoize responses
+WeatherApiClient --> WeatherData : creates DTO
+
+AppDbContext --> WeatherData : DbSet
+
+note top of WeatherApiClient
+Uses HttpClient + MemoryCache
+to avoid redundant OpenWeather calls
+for 15 minutes per city.
+end note
+
+note bottom of WeatherService
+FetchAndSaveAsync:
+1. Ask API client
+2. Save via EF Core
+3. Return latest entity
+end note
+
+@enduml

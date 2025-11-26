@@ -1,36 +1,97 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - WeatherInsight</title>
-    <script type="importmap"></script>
+    <title>@ViewData["Title"] - WeatherInsight+</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/WeatherInsight.styles.css" asp-append-version="true" />
+    <style>
+        body {
+            background: linear-gradient(180deg, #f7fbff 0%, #eef5ff 100%);
+        }
+
+        h1.app-title {
+            font-weight: 800;
+            font-size: 2.8rem;
+            text-align: center;
+            margin-top: 2rem;
+            margin-bottom: 0.5rem;
+            color: #440ef5;
+        }
+
+        .weather-card {
+            background: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        /* Floating color highlight based on weather intensity */
+        .intensity-low {
+            background: rgba(135, 206, 250, 0.2);
+            /* light blue */
+        }
+
+        .intensity-medium {
+            background: rgba(255, 215, 0, 0.25);
+            /* soft yellow */
+        }
+
+        .intensity-high {
+            background: rgba(255, 99, 71, 0.25);
+            /* soft red */
+        }
+
+        .intensity-tag {
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #fff;
+        }
+
+        .tag-low {
+            background: #4aa3df;
+        }
+
+        .tag-medium {
+            background: #e0b100;
+        }
+
+        .tag-high {
+            background: #d9534f;
+        }
+
+        table.weather-history tbody tr:hover {
+            background: #f1f8ff;
+        }
+    </style>
 </head>
+
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">WeatherInsight</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
+                <a class="navbar-brand fw-bold text-primary" asp-area="" asp-controller="Home"
+                    asp-action="Index">WeatherInsight+</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target=".navbar-collapse">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                        <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Index">Home</a></li>
+                        <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
                     </ul>
                 </div>
             </div>
         </nav>
     </header>
+
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
@@ -38,13 +99,30 @@
     </div>
 
     <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2025 - WeatherInsight - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
+        <div class="container">&copy; 2025 - WeatherInsight+</div>
     </footer>
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script>
+        // Apply floating color logic dynamically
+        function applyIntensity(temp, rowElement) {
+            let cls = "";
+            if (temp < 10) cls = "intensity-low";
+            else if (temp < 20) cls = "intensity-medium";
+            else cls = "intensity-high";
+            rowElement.classList.add(cls);
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            document.querySelectorAll("tr[data-temp]").forEach(row => {
+                const t = parseFloat(row.getAttribute("data-temp"));
+                applyIntensity(t, row);
+            });
+        });
+    </script>
+
     @await RenderSectionAsync("Scripts", required: false)
 </body>
+
 </html>
