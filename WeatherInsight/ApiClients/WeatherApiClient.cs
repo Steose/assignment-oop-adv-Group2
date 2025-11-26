@@ -28,7 +28,7 @@ namespace WeatherInsight.ApiClients
         public async Task<WeatherData?> FetchWeatherAsync(string city)
         {
             const int  API_MEMORY_CACHE_TIME_TO_LIVE_MINUTES = 15;
-            var url = _builder.WithCity(city).Build(_apiKey);
+            var url = _builder.WithCity(city).Build(_apiKey!); // (! just tells the compiler we know _apiKey isn’t null).
 
             // Variable to hold the JSON response
             string json;
@@ -38,10 +38,10 @@ namespace WeatherInsight.ApiClients
             // Look for weatherdata in memory cache
             if (_cache.TryGetValue(cacheKey, out WeatherData? cachedWeatherData))
             {
-                   // The program expects the Id of new searches to be 0.
-                   //  The Id of the cached data is already taken in the search history weather.db database.
-                    cachedWeatherData.Id = 0;
-                    return cachedWeatherData;
+                // The program expects the Id of new searches to be 0.
+                //  The Id of the cached data is already taken in the search history weather.db database.
+                cachedWeatherData!.Id = 0; // (!) just tells the compiler we know cachedWeatherData isn’t null.
+                return cachedWeatherData;
             }
 
             // Attempt to fetch the weather data
