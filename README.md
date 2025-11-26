@@ -37,7 +37,7 @@ cd WeatherInsight
 Linux/MAC: OPENWEATHER_API_KEY="<your-api-key>" dotnet run
 Windows: $env:OPENWEATHER_API_KEY="your_api_key" dotnet run
 ```
-Open the URL shown in the console (typically `https://localhost:5001`). Enter a city and submit to fetch the latest weather and update the history table.
+Open the URL shown in the console (typically `https://localhost:5160`). Enter a city and submit to fetch the latest weather and update the history table.
 
 ## Project Structure (highlights)
 - `WeatherInsight/Controllers` – MVC controllers (`HomeController`) that drive the views.
@@ -49,7 +49,7 @@ Open the URL shown in the console (typically `https://localhost:5001`). Enter a 
 - `WeatherInsight/Views` – Razor UI, especially `Views/Home/Index.cshtml`.
 
 ## Additional Documentation
-- `DOCUMENTATION.md` – Detailed architecture, request flow, and configuration notes.
+- `API DOCUMENTATION.md` – API endpoints and structure.
 - `reflection.md` – Summary of recent work, challenges, and follow-up ideas.
 
 ## Contributing
@@ -57,6 +57,9 @@ Open the URL shown in the console (typically `https://localhost:5001`). Enter a 
 2. Make your changes (add tests wherever possible).
 3. Run `dotnet build` (and tests if added).
 4. Submit a pull request referencing the relevant issue.
+
+## Normalization & CRUD
+- Agreed upon with instructor that it was not required for this project. 
 
 ## License
 This project inherits the license terms in `LICENSE`. Review that file before distributing or modifying the software.
