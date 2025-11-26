@@ -27,7 +27,7 @@ namespace WeatherInsight.Services
             {
                 // The program expects the Id of new searches to be 0.
                 // The Id of the cached search is already taken in the search history weather.db database.
-                weatherData.Id = 0;
+                weatherData!.Id = 0; // (!) just tells the compiler we know cachedWeatherData isn’t null.
                 cachedWeatherData = weatherData;
                 return true;
             }

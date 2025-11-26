@@ -28,7 +28,7 @@ namespace WeatherInsight.ApiClients
 
         public async Task<WeatherData?> FetchWeatherAsync(string city)
         {
-            var url = _builder.WithCity(city).Build(_apiKey);
+            var url = _builder.WithCity(city).Build(_apiKey!); // (! just tells the compiler we know _apiKey isn’t null).
 
             // Variable to hold the JSON response
             string json;
