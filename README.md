@@ -59,7 +59,10 @@ Open the URL shown in the console (typically `https://localhost:5160`). Enter a 
 4. Submit a pull request referencing the relevant issue.
 
 ## Normalization & CRUD
-- Agreed upon with instructor that it was not required for this project. 
+- Agreed upon with instructor that it was not required for this project.
+
+## LINK for API-key
+- Open Weather API-Key: https://openweathermap.org/api
 
 ## License
 This project inherits the license terms in `LICENSE`. Review that file before distributing or modifying the software.
