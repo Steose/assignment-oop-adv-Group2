@@ -49,7 +49,7 @@ Open the URL shown in the console (typically `https://localhost:5160`). Enter a 
 - `WeatherInsight/Views` – Razor UI, especially `Views/Home/Index.cshtml`.
 
 ## Additional Documentation
-- `API DOCUMENTATION.md` – API endpoints and structure.
+- `API_dokumentation.md` – API endpoints and structure.
 - `reflection.md` – Summary of recent work, challenges, and follow-up ideas.
 
 ## Contributing
