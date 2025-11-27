@@ -3,6 +3,7 @@ using System.Text.Json;
 using Microsoft.AspNetCore.DataProtection.KeyManagement.Internal;
 using Microsoft.Extensions.Caching.Memory;
 using WeatherInsight.Models;
+using WeatherInsight.Services;
 
 namespace WeatherInsight.ApiClients
 {
@@ -11,13 +12,13 @@ namespace WeatherInsight.ApiClients
         private readonly HttpClient _client;
         private readonly WeatherRequestBuilder _builder;
         private readonly string? _apiKey;
-        private readonly IMemoryCache _cache;
+        private readonly IWeatherApiCacheService _apiCacheService;
 
-        public WeatherApiClient(HttpClient client, WeatherRequestBuilder builder, IConfiguration config, IMemoryCache cache)
+        public WeatherApiClient(HttpClient client, WeatherRequestBuilder builder, IConfiguration config, IWeatherApiCacheService apiCacheService)
         {
             _client = client;
             _builder = builder;
-            _cache = cache;
+            _apiCacheService = apiCacheService;
             _apiKey = Environment.GetEnvironmentVariable("OPENWEATHER_API_KEY");
             if (string.IsNullOrEmpty(_apiKey))
             {
@@ -27,24 +28,18 @@ namespace WeatherInsight.ApiClients
 
         public async Task<WeatherData?> FetchWeatherAsync(string city)
         {
-            const int  API_MEMORY_CACHE_TIME_TO_LIVE_MINUTES = 15;
             var url = _builder.WithCity(city).Build(_apiKey!); // (! just tells the compiler we know _apiKey isn’t null).
 
             // Variable to hold the JSON response
             string json;
 
-            var cacheKey = $"weatherdata_{city}";
-
             // Look for weatherdata in memory cache
-            if (_cache.TryGetValue(cacheKey, out WeatherData? cachedWeatherData))
+            if (_apiCacheService.TryGetWeatherFromCache(city, out WeatherData? cachedWeatherData))
             {
-                // The program expects the Id of new searches to be 0.
-                //  The Id of the cached data is already taken in the search history weather.db database.
-                cachedWeatherData!.Id = 0; // (!) just tells the compiler we know cachedWeatherData isn’t null.
                 return cachedWeatherData;
             }
 
-            // Attempt to fetch the weather data
+            // Attempt to fetch the weather data from API
             try
             {
                 json = await _client.GetStringAsync(url);
@@ -70,8 +65,8 @@ namespace WeatherInsight.ApiClients
                 Date = DateTime.Now
             };
 
-            // Store the newly optained weatherdata in memory cacke.
-            _cache.Set(cacheKey, newWeatherData, TimeSpan.FromMinutes(API_MEMORY_CACHE_TIME_TO_LIVE_MINUTES));
+            // Store the newly obtained weatherdata in memory cacke.
+            _apiCacheService.CacheWeatherData(city, newWeatherData);
 
             return newWeatherData;
         }

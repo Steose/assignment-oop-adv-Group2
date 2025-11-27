@@ -42,6 +42,8 @@ builder.Services.AddControllersWithViews();
 
 // Memory cache for the controller's communication with the weather api
 builder.Services.AddMemoryCache();
+builder.Services.AddScoped<IWeatherApiCacheService, WeatherApiCacheService>();
+builder.Services.AddHttpClient<IWeatherApiClient, WeatherApiClient>();
 
 // Step 8: Materialize the WebApplication with all the above configuration.
 var app = builder.Build();
