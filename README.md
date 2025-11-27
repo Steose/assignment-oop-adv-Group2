@@ -56,7 +56,6 @@ Open the URL shown in the console (typically `https://localhost:5160`). Enter a 
 
 ## Additional Documentation
 - `API_dokumentation.md` – API endpoints and structure.
-- `reflection.md` – Summary of recent work, challenges, and follow-up ideas.
 - Kanban
 ![Kanban](WeatherInsight/doc/kanban_screenshot.png)
 *Project kanban group planning and management.*
