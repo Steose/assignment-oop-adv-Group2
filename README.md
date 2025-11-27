@@ -18,6 +18,7 @@ WeatherInsight is an ASP.NET Core MVC (Model-View-Controller) application that q
 ## Tech Stack
 - .NET 9 / ASP.NET Core MVC
 - Entity Framework Core (SQLite provider)
+- ASP.NET Core IMemoryCache memory cache interface
 - Typed `HttpClient` + configuration-driven API key management
 
 ## Prerequisites
