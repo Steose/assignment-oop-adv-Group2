@@ -9,6 +9,12 @@ WeatherInsight is an ASP.NET Core MVC application that queries the OpenWeather A
 - Display the most recent reading alongside the full lookup history.
 - Typed `HttpClient` integration with graceful handling of unauthorized or malformed responses.
 
+## 🖼️ Screenshots
+### Web interface
+![Web interface](WeatherInsight/doc/user_interface_screenshot.png)
+
+*The web interface of the application*
+
 ## Tech Stack
 - .NET 9 / ASP.NET Core MVC
 - Entity Framework Core (SQLite provider)
