@@ -56,7 +56,7 @@ Open the URL shown in the console (typically `https://localhost:5160`). Enter a 
 - `WeatherInsight/Views` – Razor UI, especially `Views/Home/Index.cshtml`.
 
 ## Additional Documentation
-- `API_dokumentation.md` – API endpoints and structure.
+- `WeatherInsight/doc/API_document/API_dokumentation.md` – API endpoints and structure.
 - Kanban
 ![Kanban](WeatherInsight/doc/kanban_screenshot.png)
 *Project kanban group planning and management.*
