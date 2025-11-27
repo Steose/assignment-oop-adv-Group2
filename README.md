@@ -1,6 +1,6 @@
 # WeatherInsight
 
-WeatherInsight is an ASP.NET Core MVC (Model-View-Controller) application that queries the OpenWeather API for current conditions, saves each lookup in a local SQLite database, and surfaces both the latest reading and the full history through a clean Razor view.
+WeatherInsight is an ASP.NET Core MVC (Model-View-Controller) application that queries the [OpenWeather API](https://openweathermap.org/api) for current conditions, saves each lookup in a local SQLite database, and surfaces both the latest reading and the full history through a clean Razor view.
 
 ## Features
 - Search for weather by city with a simple GET form.
@@ -22,7 +22,7 @@ WeatherInsight is an ASP.NET Core MVC (Model-View-Controller) application that q
 
 ## Prerequisites
 - [.NET 9 SDK](https://dotnet.microsoft.com/download)
-- An OpenWeather API key (free tier works for development)
+- An [OpenWeather API](https://openweathermap.org/api) key (free tier works for development)
 
 ## Setup
 1. Clone the repository and move into the solution folder:
