@@ -55,6 +55,12 @@ namespace WeatherInsight.ApiClients
                 throw new ArgumentException("City name is wrong");
             }
 
+            catch (HttpRequestException ex) when (ex.StatusCode == HttpStatusCode.Unauthorized)
+            {
+                // If it returns 401, api access was denied. Probalbly because wrong api key
+                throw new ArgumentException("Access denied. Is the provided api key correct?");
+            }
+
             var obj = JsonSerializer.Deserialize<JsonElement>(json);
             var newWeatherData = new WeatherData
             {
