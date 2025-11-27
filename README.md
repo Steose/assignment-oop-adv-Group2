@@ -70,8 +70,8 @@ Open the URL shown in the console (typically `https://localhost:5160`). Enter a 
 ## Normalization & full CRUD
 - Agreed upon with instructor that it was not required for this project, since our database is only used as history log. Only create and read CRUD operations are implemented.
 
-## LINK for API-key
-- Get an OpenWeather API-key by signing up here: https://openweathermap.org/api
+## Link to API key
+- Get an OpenWeather API key by signing up here: https://openweathermap.org/api
 
 ## License
 This project inherits the license terms in `LICENSE`. Review that file before distributing or modifying the software.
