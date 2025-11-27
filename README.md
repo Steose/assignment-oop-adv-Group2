@@ -68,7 +68,7 @@ Open the URL shown in the console (typically `https://localhost:5160`). Enter a 
 4. Submit a pull request referencing the relevant issue.
 
 ## Normalization & full CRUD
-- Agreed upon with instructor that it was not required for this project, since our database is only used as history log. Only create and read CRUD operations are implemented
+- Agreed upon with instructor that it was not required for this project, since our database is only used as history log. Only create and read CRUD operations are implemented.
 
 ## LINK for API-key
 - Get an OpenWeather API-key by signing up here: https://openweathermap.org/api
