@@ -48,8 +48,8 @@ Open the URL shown in the console (typically `https://localhost:5160`). Enter a 
 
 ## Project Structure (highlights)
 - `WeatherInsight/Controllers` – MVC controllers (`HomeController`) that drive the views.
-- `WeatherInsight/Services` – `WeatherService` orchestrates API calls and persistence.
-- `WeatherInsight/ApiClients` – `WeatherApiClient`, `IWeatherApiClient`, and `WeatherRequestBuilder` Cache the API responses in RAM.
+- `WeatherInsight/Services` – `WeatherService` and `WeatherApiCacheService` orchestrates API calls, memory caching and persistence.
+- `WeatherInsight/ApiClients` – `WeatherApiClient`, `IWeatherApiClient`, and `WeatherRequestBuilder` Low level handling of the api calls.
 - `WeatherInsight/Data` – `AppDbContext` (EF Core DbContext).
 - `WeatherInsight/Models` – Domain entities (`WeatherData`, `ErrorViewModel`).
 - `WeatherInsight/Repositories` – Repository abstraction for persistence.
