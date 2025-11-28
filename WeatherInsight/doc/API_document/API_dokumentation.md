@@ -77,6 +77,9 @@ CREATE TABLE IF NOT EXISTS "WeatherData" (
 	CONSTRAINT "PK_WeatherData" PRIMARY KEY("Id" AUTOINCREMENT)
 ```
 
+#### **SQLite API**
+
+- Application uses Entity Framework Core, which in turn uses ADO.NET, to read and write to the local SQLite database.
 
 #### **Caching strategy**
 
