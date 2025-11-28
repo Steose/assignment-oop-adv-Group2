@@ -18,7 +18,7 @@ The application follows the MVC (Model-View-Controller) design pattern, where th
 - **Parameters:**
     - `city` (query, optional): Name of city (default: "Stockholm")
 - **Response:** HTML-view with current weather + 10 latest searches.
-- **Error handling:** In case of non valid city name, an error message is dispalyed in ViewData["City name is wrong"]
+- **Error handling:** In case of non valid city name, an error message is displayed in ViewData["City name is wrong"]
 
 #### **Data flow**
 
