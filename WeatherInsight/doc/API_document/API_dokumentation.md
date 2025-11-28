@@ -32,11 +32,10 @@ The application follows the MVC (Model-View-Controller) design pattern, where th
 2. **WeatherService.FetchAndSaveAsync(city)**
     - Calls `_apiClient.FetchWeatherAsync(city)`
     - Saves results with `_context.WeatherData.Add(data)`
-    - Returns `WeatherData`-object.
+    - Returns `WeatherData`-object
 3. **WeatherApiClient.FetchWeatherAsync(city)**
-    - **Cache check:** `_cache.TryGetValue(cacheKey, out WeatherData? cachedData)`
+    - **Cache check:** `_apiCacheService.TryGetWeatherFromCache(city, out WeatherData? cachedWeatherData)`
     - **API call (cache miss):**
-
 
 
 ```csharp
@@ -44,12 +43,12 @@ The application follows the MVC (Model-View-Controller) design pattern, where th
      var json = await _client.GetStringAsync(url);
 ```
 
-- **Deserialisering:** JSON → `WeatherData`-objekt
-- **Cache update:** `_cache.Set(cacheKey, data, TimeSpan.FromMinutes(15))`
+- **Deserialization:** JSON → `WeatherData`-object
+- **Cache update:** `_apiCacheService.CacheWeatherData(city, newWeatherData)`
 
 4. **Database persistence (EF Core)**
     - `AppDbContext.WeatherData.Add(data)`
-    - `SaveChangesAsync()` skriver till SQLite (`weather.db`)
+    - `SaveChangesAsync()` writes to SQLite (`weather.db`)
 
 #### **Modeller**
 
