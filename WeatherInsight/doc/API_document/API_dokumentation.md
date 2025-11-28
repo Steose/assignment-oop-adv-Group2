@@ -90,7 +90,7 @@ public class WeatherData
 
 #### **Database migration**
 
-Automatisk migration vid appstart via `Program.cs`:
+Automatic migration at application startup in `Program.cs`:
 
 
 ```csharp
