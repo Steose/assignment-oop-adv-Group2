@@ -50,7 +50,7 @@ The application follows the MVC (Model-View-Controller) design pattern, where th
     - `AppDbContext.WeatherData.Add(data)`
     - `SaveChangesAsync()` writes to SQLite (`weather.db`)
 
-#### **Modeller**
+#### **Models**
 
 **WeatherData**
 
@@ -59,10 +59,10 @@ The application follows the MVC (Model-View-Controller) design pattern, where th
 public class WeatherData
 {
     public int Id { get; set; }              // Primary key (auto-increment)
-    public string City { get; set; }         // Stadsnamn
-    public double Temperature { get; set; }  // Temperatur (°C)
-    public string Condition { get; set; }    // Väderbeskrivning
-    public DateTime Date { get; set; }       // Tidsstämpel för sökning
+    public string City { get; set; }         // Cityname
+    public double Temperature { get; set; }  // Temperature (°C)
+    public string Condition { get; set; }    // Weather description
+    public DateTime Date { get; set; }       // Search timestamp
 }
 ```
 
