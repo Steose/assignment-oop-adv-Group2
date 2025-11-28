@@ -81,6 +81,18 @@ CREATE TABLE IF NOT EXISTS "WeatherData" (
 
 - Application uses Entity Framework Core, which in turn uses ADO.NET, to read and write to the local SQLite database.
 
+#### **Database migration**
+
+Automatic migration at application startup in `Program.cs`:
+
+```csharp
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    db.Database.Migrate();
+}
+```
+
 #### **Caching strategy**
 
 - **Type:** In-memory cache (IMemoryCache)
@@ -103,18 +115,5 @@ CREATE TABLE IF NOT EXISTS "WeatherData" (
 - **API key:** read from environment variable `OPENWEATHER_API_KEY`
 - **Security headers:** `X-Content-Type-Options`, `X-Frame-Options`, `Referrer-Policy`
 - **HTTPS:** Forced redirection in produktion
-
-#### **Database migration**
-
-Automatic migration at application startup in `Program.cs`:
-
-
-```csharp
-using (var scope = app.Services.CreateScope())
-{
-    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-    db.Database.Migrate();
-}
-```
 
 [comment]: # (Edited with help from Claude, https://github.com/copilot/share/00755126-00a4-80a0-9141-280380460926)
