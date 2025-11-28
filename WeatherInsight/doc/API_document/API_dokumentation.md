@@ -65,6 +65,18 @@ public class WeatherData
     public DateTime Date { get; set; }       // Search timestamp
 }
 ```
+#### **Local SQLite database structure**
+
+```
+CREATE TABLE IF NOT EXISTS "WeatherData" (
+	"Id"	INTEGER NOT NULL,
+	"City"	TEXT NOT NULL,
+	"Temperature"	REAL NOT NULL,
+	"Condition"	TEXT NOT NULL,
+	"Date"	TEXT NOT NULL,
+	CONSTRAINT "PK_WeatherData" PRIMARY KEY("Id" AUTOINCREMENT)
+```
+
 
 #### **Caching strategy**
 
