@@ -75,12 +75,12 @@ public class WeatherData
 - **Cache hit:** Returns data directly, sets `Id = 0` to prevent Primary Key conflict
 - **Cache miss:** API-call → deserialization → cache + database
 
-#### **Felhantering**
+#### **Error handling**
 
-- **404 Not Found (OpenWeather API):** Kastas som `ArgumentException("City name is wrong")`
-- **HTTP-fel:** Polly retry-policy (3 försök, exponentiell backoff)
-- **Circuit breaker:** Efter 3 misslyckade anrop, 10 sekunders paus
-- **Timeout:** 10 sekunder per request (`client.Timeout`)
+- **404 Not Found (OpenWeather API):** Throws `ArgumentException("City name is wrong")`
+- **HTTP-error:** Polly retry-policy (3 tries, exponential backoff)
+- **Circuit breaker:** After 3 failed calls, 10 seconds pause
+- **Timeout:** 10 seconds per request (`client.Timeout`)
 
 #### **Säkerhet**
 
