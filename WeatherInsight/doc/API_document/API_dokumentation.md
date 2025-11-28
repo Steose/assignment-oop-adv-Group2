@@ -20,9 +20,9 @@ The application follows the MVC (Model-View-Controller) design pattern, where th
 - **Response:** HTML-view with current weather + 10 latest searches.
 - **Error handling:** In case of non valid city name, an error message is dispalyed in ViewData["City name is wrong"]
 
-#### **Dataflöde**
+#### **Data flow**
 
-1. **User Request → HomeController.Index(city)**
+1. **User Requests**
 
 ```csharp
    var latest = await _weatherService.FetchAndSaveAsync(city);
@@ -30,9 +30,9 @@ The application follows the MVC (Model-View-Controller) design pattern, where th
 ```
 
 2. **WeatherService.FetchAndSaveAsync(city)**
-    - Anropar `_apiClient.FetchWeatherAsync(city)`
-    - Sparar resultat via `_context.WeatherData.Add(data)`
-    - Returnerar `WeatherData`-objekt
+    - Calls `_apiClient.FetchWeatherAsync(city)`
+    - Saves results with `_context.WeatherData.Add(data)`
+    - Returns `WeatherData`-object.
 3. **WeatherApiClient.FetchWeatherAsync(city)**
     - **Cache check:** `_cache.TryGetValue(cacheKey, out WeatherData? cachedData)`
     - **API call (cache miss):**
