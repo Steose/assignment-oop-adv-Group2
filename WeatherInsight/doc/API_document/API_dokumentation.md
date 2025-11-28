@@ -78,7 +78,8 @@ public class WeatherData
 #### **Error handling**
 
 - **404 Not Found (OpenWeather API):** Throws `ArgumentException("City name is wrong")`
-- **HTTP-error:** Polly retry-policy (3 tries, exponential backoff)
+- **401 Unauthorized (OpenWeather API):** Throws `ArgumentException("Access denied. Is the provided api key correct?")`
+- **HTTP-error:** Polly retry-policy (3 tries, linear backoff)
 - **Circuit breaker:** After 3 failed calls, 10 seconds pause
 - **Timeout:** 10 seconds per request (`client.Timeout`)
 
@@ -100,3 +101,5 @@ using (var scope = app.Services.CreateScope())
     db.Database.Migrate();
 }
 ```
+
+[comment]: # (Edited with help from Claude, https://github.com/copilot/share/00755126-00a4-80a0-9141-280380460926)
