@@ -66,14 +66,14 @@ public class WeatherData
 }
 ```
 
-#### **Caching-strategi**
+#### **Caching strategy**
 
 - **Type:** In-memory cache (IMemoryCache)
-- **TTL:** 15 minuter
+- **TTL:** 15 minutes
 - **Cache key:** `"weatherdata_{city}"`
-- **Invalidering:** Automatisk efter TTL, ingen manuell invalidering
-- **Cache hit:** Returnerar data direkt, sätter `Id = 0` för att undvika PK-konflikt
-- **Cache miss:** API-anrop → deserialisering → cache + databas
+- **Invalidation:** Automatic after TTL, no manual invalidation
+- **Cache hit:** Returns data directly, sets `Id = 0` to prevent Primary Key conflict
+- **Cache miss:** API-call → deserialization → cache + database
 
 #### **Felhantering**
 
