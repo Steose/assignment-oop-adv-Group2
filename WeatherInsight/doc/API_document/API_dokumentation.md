@@ -14,17 +14,15 @@ The application follows the MVC (Model-View-Controller) design pattern, where th
 **GET /**  
 **GET /?city={cityName}**
 
-- **Description:** Hämtar väderdata för angiven stad och visar historik
+- **Description:** Gets weatherdata for selected city and shows history
 - **Parameters:**
-    - `city` (query, optional): Stadsnamn (default: "Stockholm")
-- **Response:** HTML-vy med aktuellt väder + 10 senaste sökningar
-- **Felhantering:** Vid ogiltig stad visas felmeddelande i ViewData["Error"]
+    - `city` (query, optional): Name of city (default: "Stockholm")
+- **Response:** HTML-view with current weather + 10 latest searches.
+- **Error handling:** In case of non valid city name, an error message is dispalyed in ViewData["City name is wrong"]
 
 #### **Dataflöde**
 
 1. **User Request → HomeController.Index(city)**
-
-
 
 ```csharp
    var latest = await _weatherService.FetchAndSaveAsync(city);
