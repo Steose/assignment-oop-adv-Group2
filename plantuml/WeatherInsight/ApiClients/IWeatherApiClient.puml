@@ -1,0 +1,5 @@
+@startuml
+interface IWeatherApiClient {
+    FetchWeatherAsync(city:string) : Task<WeatherData?>
+}
+@enduml

@@ -1,0 +1,9 @@
+@startuml
+class WeatherRepository {
+    + WeatherRepository(context:AppDbContext)
+    + <<async>> GetAsync(city:string) : Task<WeatherData?>
+    + <<async>> SaveAsync(data:WeatherData) : Task
+}
+IWeatherRepository <|-- WeatherRepository
+WeatherRepository --> "_context" AppDbContext
+@enduml

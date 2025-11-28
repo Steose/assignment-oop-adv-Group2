@@ -1,0 +1,9 @@
+@startuml
+class WeatherData {
+    + Id : int <<get>> <<set>>
+    + City : string <<get>> <<set>>
+    + Temperature : double <<get>> <<set>>
+    + Condition : string <<get>> <<set>>
+}
+WeatherData --> "Date" DateTime
+@enduml

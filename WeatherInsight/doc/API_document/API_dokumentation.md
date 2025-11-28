@@ -11,8 +11,8 @@ The application follows the MVC (Model-View-Controller) design pattern, where th
 
 #### **Endpoints**
 
-**GET /**  
-**GET /?city={cityName}**
+**GET https://api.openweathermap.org/data/2.5/weather/**  
+**GET https://api.openweathermap.org/data/2.5/weather/?city={cityName}**
 
 - **Description:** Gets weatherdata for selected city and shows history
 - **Parameters:**

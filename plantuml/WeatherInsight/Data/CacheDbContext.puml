@@ -1,0 +1,9 @@
+@startuml
+class CacheDbContext {
+    + CacheDbContext(options:DbContextOptions<AppDbContext>)
+}
+class "DbSet`1"<T> {
+}
+DbContext <|-- CacheDbContext
+CacheDbContext --> "CachedWeatherData<CachedWeatherData>" "DbSet`1"
+@enduml
