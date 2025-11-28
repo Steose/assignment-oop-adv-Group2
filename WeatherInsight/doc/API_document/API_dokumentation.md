@@ -14,7 +14,7 @@ The application follows the MVC (Model-View-Controller) design pattern, where th
 **GET https://api.openweathermap.org/data/2.5/weather/**  
 **GET https://api.openweathermap.org/data/2.5/weather/?city={cityName}**
 
-- `WeatherRequestBuilder.cs` class for endpoint construction
+- `WeatherInsight/ApiClients/WeatherRequestBuilder.cs` class for endpoint construction
 
 - **Description:** Gets weatherdata for selected city and shows history
 - **Parameters:**
@@ -82,11 +82,11 @@ CREATE TABLE IF NOT EXISTS "WeatherData" (
 #### **SQLite API**
 
 - Application uses Entity Framework Core, which in turn uses ADO.NET, to read and write to the local SQLite database.
-- `WeatherRepository.cs` class for database interaction
+- `WeatherInsight/Repositories/WeatherRepository.cs` class for database interaction
 
 #### **Database migration**
 
-Automatic migration at application startup in `Program.cs`:
+Automatic migration at application startup in `WeatherInsight/Program.cs`:
 
 ```csharp
 using (var scope = app.Services.CreateScope())
