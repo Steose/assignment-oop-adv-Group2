@@ -1,0 +1,11 @@
+@startuml
+class WeatherApiClient {
+    - <<readonly>> _apiKey : string?
+    + WeatherApiClient(client:HttpClient, builder:WeatherRequestBuilder, config:IConfiguration, cache:IMemoryCache)
+    + <<async>> FetchWeatherAsync(city:string) : Task<WeatherData?>
+}
+IWeatherApiClient <|-- WeatherApiClient
+WeatherApiClient --> "_client" HttpClient
+WeatherApiClient --> "_builder" WeatherRequestBuilder
+WeatherApiClient --> "_cache" IMemoryCache
+@enduml

@@ -1,20 +1,20 @@
 ### **WeatherInsight API Documentation**
 
-#### **Arkitekturöversikt**
+#### **Overview architecture**
 
-Applikationen följer en lagerad arkitektur:
+The application follows the MVC (Model-View-Controller) design pattern, where the Controller layer handles the API communication.
 
-- **Presentation:** `HomeController` hanterar HTTP-requests
-- **Business Logic:** `WeatherService` koordinerar API + databas
-- **Data Access:** `WeatherRepository` kapslar EF Core-operationer
-- **External API:** `WeatherApiClient` kommunicerar med OpenWeather API
+- `HomeController` handles HTTP-requests
+- `WeatherService` coordinates external API + database API
+- `WeatherRepository` encapsulates EF Core-operations
+- `WeatherApiClient` communicates with external OpenWeather API
 
 #### **Endpoints**
 
 **GET /**  
 **GET /?city={cityName}**
 
-- **Beskrivning:** Hämtar väderdata för angiven stad och visar historik
+- **Description:** Hämtar väderdata för angiven stad och visar historik
 - **Parameters:**
     - `city` (query, optional): Stadsnamn (default: "Stockholm")
 - **Response:** HTML-vy med aktuellt väder + 10 senaste sökningar

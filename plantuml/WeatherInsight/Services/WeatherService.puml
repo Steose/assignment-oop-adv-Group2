@@ -1,0 +1,10 @@
+@startuml
+class WeatherService {
+    + WeatherService(context:AppDbContext, apiClient:IWeatherApiClient, cache:IMemoryCache)
+    + <<async>> FetchAndSaveAsync(city:string) : Task<WeatherData?>
+    + <<async>> GetAllAsync() : Task<List<WeatherData>>
+}
+WeatherService --> "_context" AppDbContext
+WeatherService --> "_apiClient" IWeatherApiClient
+WeatherService --> "_cache" IMemoryCache
+@enduml
