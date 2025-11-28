@@ -57,8 +57,7 @@ Open the URL shown in the console (typically `https://localhost:5160`). Enter a 
 
 ## Additional Documentation
 - `WeatherInsight/doc/API_document/API_dokumentation.md` – API endpoints and structure.
-- UML class diagram
-![UML](WeatherInsight/doc/UML/UML_diagram.png)
+- `WeatherInsight/doc/UML/UML_*` UML class diagrams (images and UML source code)
 - Kanban
 ![Kanban](WeatherInsight/doc/kanban_screenshot.png)
 *Project kanban group planning and management.*
