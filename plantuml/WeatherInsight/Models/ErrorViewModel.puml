@@ -1,6 +1,0 @@
-@startuml
-class ErrorViewModel {
-    + RequestId : string? <<get>> <<set>>
-    + ShowRequestId : bool <<get>>
-}
-@enduml
