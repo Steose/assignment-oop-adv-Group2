@@ -82,13 +82,13 @@ public class WeatherData
 - **Circuit breaker:** After 3 failed calls, 10 seconds pause
 - **Timeout:** 10 seconds per request (`client.Timeout`)
 
-#### **Säkerhet**
+#### **Security**
 
-- **API-nyckel:** Läses från miljövariabel `OPENWEATHER_API_KEY`
+- **API key:** read from environment variable `OPENWEATHER_API_KEY`
 - **Security headers:** `X-Content-Type-Options`, `X-Frame-Options`, `Referrer-Policy`
-- **HTTPS:** Tvingande omdirigering i produktion
+- **HTTPS:** Forced redirection in produktion
 
-#### **Databasmigration**
+#### **Database migration**
 
 Automatisk migration vid appstart via `Program.cs`:
 
