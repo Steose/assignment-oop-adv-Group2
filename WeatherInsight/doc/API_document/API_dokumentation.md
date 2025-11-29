@@ -1,30 +1,30 @@
 ### **WeatherInsight API Documentation**
 
-#### **Arkitekturöversikt**
+#### **Overview architecture**
 
-Applikationen följer en lagerad arkitektur:
+The application follows the MVC (Model-View-Controller) design pattern, where the Controller layer handles the API communication.
 
-- **Presentation:** `HomeController` hanterar HTTP-requests
-- **Business Logic:** `WeatherService` koordinerar API + databas
-- **Data Access:** `WeatherRepository` kapslar EF Core-operationer
-- **External API:** `WeatherApiClient` kommunicerar med OpenWeather API
+- `HomeController` handles HTTP-requests
+- `WeatherService` coordinates external API + database API
+- `WeatherRepository` encapsulates EF Core-operations
+- `WeatherApiClient` communicates with external OpenWeather API
 
 #### **Endpoints**
 
-**GET /**  
-**GET /?city={cityName}**
+**GET https://api.openweathermap.org/data/2.5/weather/**  
+**GET https://api.openweathermap.org/data/2.5/weather/?city={cityName}**
 
-- **Beskrivning:** Hämtar väderdata för angiven stad och visar historik
+- `WeatherInsight/ApiClients/WeatherRequestBuilder.cs` class for endpoint construction
+
+- **Description:** Gets weatherdata for selected city and shows history
 - **Parameters:**
-    - `city` (query, optional): Stadsnamn (default: "Stockholm")
-- **Response:** HTML-vy med aktuellt väder + 10 senaste sökningar
-- **Felhantering:** Vid ogiltig stad visas felmeddelande i ViewData["Error"]
+    - `city` (query, optional): Name of city (default: "Stockholm")
+- **Response:** HTML-view with current weather + 10 latest searches.
+- **Error handling:** In case of non valid city name, an error message is displayed in ViewData["City name is wrong"]
 
-#### **Dataflöde**
+#### **Data flow**
 
-1. **User Request → HomeController.Index(city)**
-
-
+1. **User Requests**
 
 ```csharp
    var latest = await _weatherService.FetchAndSaveAsync(city);
@@ -32,13 +32,12 @@ Applikationen följer en lagerad arkitektur:
 ```
 
 2. **WeatherService.FetchAndSaveAsync(city)**
-    - Anropar `_apiClient.FetchWeatherAsync(city)`
-    - Sparar resultat via `_context.WeatherData.Add(data)`
-    - Returnerar `WeatherData`-objekt
+    - Calls `_apiClient.FetchWeatherAsync(city)`
+    - Saves results with `_context.WeatherData.Add(data)`
+    - Returns `WeatherData`-object
 3. **WeatherApiClient.FetchWeatherAsync(city)**
-    - **Cache check:** `_cache.TryGetValue(cacheKey, out WeatherData? cachedData)`
+    - **Cache check:** `_apiCacheService.TryGetWeatherFromCache(city, out WeatherData? cachedWeatherData)`
     - **API call (cache miss):**
-
 
 
 ```csharp
@@ -46,14 +45,14 @@ Applikationen följer en lagerad arkitektur:
      var json = await _client.GetStringAsync(url);
 ```
 
-- **Deserialisering:** JSON → `WeatherData`-objekt
-- **Cache update:** `_cache.Set(cacheKey, data, TimeSpan.FromMinutes(15))`
+- **Deserialization:** JSON → `WeatherData`-object
+- **Cache update:** `_apiCacheService.CacheWeatherData(city, newWeatherData)`
 
 4. **Database persistence (EF Core)**
     - `AppDbContext.WeatherData.Add(data)`
-    - `SaveChangesAsync()` skriver till SQLite (`weather.db`)
+    - `SaveChangesAsync()` writes to SQLite (`weather.db`)
 
-#### **Modeller**
+#### **Models**
 
 **WeatherData**
 
@@ -62,39 +61,32 @@ Applikationen följer en lagerad arkitektur:
 public class WeatherData
 {
     public int Id { get; set; }              // Primary key (auto-increment)
-    public string City { get; set; }         // Stadsnamn
-    public double Temperature { get; set; }  // Temperatur (°C)
-    public string Condition { get; set; }    // Väderbeskrivning
-    public DateTime Date { get; set; }       // Tidsstämpel för sökning
+    public string City { get; set; }         // Cityname
+    public double Temperature { get; set; }  // Temperature (°C)
+    public string Condition { get; set; }    // Weather description
+    public DateTime Date { get; set; }       // Search timestamp
 }
 ```
+#### **Local SQLite database structure**
 
-#### **Caching-strategi**
+```
+CREATE TABLE IF NOT EXISTS "WeatherData" (
+	"Id"	INTEGER NOT NULL,
+	"City"	TEXT NOT NULL,
+	"Temperature"	REAL NOT NULL,
+	"Condition"	TEXT NOT NULL,
+	"Date"	TEXT NOT NULL,
+	CONSTRAINT "PK_WeatherData" PRIMARY KEY("Id" AUTOINCREMENT)
+```
 
-- **Type:** In-memory cache (IMemoryCache)
-- **TTL:** 15 minuter
-- **Cache key:** `"weatherdata_{city}"`
-- **Invalidering:** Automatisk efter TTL, ingen manuell invalidering
-- **Cache hit:** Returnerar data direkt, sätter `Id = 0` för att undvika PK-konflikt
-- **Cache miss:** API-anrop → deserialisering → cache + databas
+#### **SQLite API**
 
-#### **Felhantering**
+- Application uses Entity Framework Core, which in turn uses ADO.NET, to read and write to the local SQLite database.
+- `WeatherInsight/Repositories/WeatherRepository.cs` class for database interaction
 
-- **404 Not Found (OpenWeather API):** Kastas som `ArgumentException("City name is wrong")`
-- **HTTP-fel:** Polly retry-policy (3 försök, exponentiell backoff)
-- **Circuit breaker:** Efter 3 misslyckade anrop, 10 sekunders paus
-- **Timeout:** 10 sekunder per request (`client.Timeout`)
+#### **Database migration**
 
-#### **Säkerhet**
-
-- **API-nyckel:** Läses från miljövariabel `OPENWEATHER_API_KEY`
-- **Security headers:** `X-Content-Type-Options`, `X-Frame-Options`, `Referrer-Policy`
-- **HTTPS:** Tvingande omdirigering i produktion
-
-#### **Databasmigration**
-
-Automatisk migration vid appstart via `Program.cs`:
-
+Automatic migration at application startup in `WeatherInsight/Program.cs`:
 
 ```csharp
 using (var scope = app.Services.CreateScope())
@@ -103,3 +95,28 @@ using (var scope = app.Services.CreateScope())
     db.Database.Migrate();
 }
 ```
+
+#### **Caching strategy**
+
+- **Type:** In-memory cache (IMemoryCache)
+- **TTL:** 15 minutes
+- **Cache key:** `"weatherdata_{city}"`
+- **Invalidation:** Automatic after TTL, no manual invalidation
+- **Cache hit:** Returns data directly, sets `Id = 0` to prevent Primary Key conflict
+- **Cache miss:** API-call → deserialization → cache + database
+
+#### **Error handling**
+
+- **404 Not Found (OpenWeather API):** Throws `ArgumentException("City name is wrong")`
+- **401 Unauthorized (OpenWeather API):** Throws `ArgumentException("Access denied. Is the provided api key correct?")`
+- **HTTP-error:** Polly retry-policy (3 tries, linear backoff)
+- **Circuit breaker:** After 3 failed calls, 10 seconds pause
+- **Timeout:** 10 seconds per request (`client.Timeout`)
+
+#### **Security**
+
+- **API key:** read from environment variable `OPENWEATHER_API_KEY`
+- **Security headers:** `X-Content-Type-Options`, `X-Frame-Options`, `Referrer-Policy`
+- **HTTPS:** Forced redirection in produktion
+
+[comment]: # (Edited with help from Claude, https://github.com/copilot/share/00755126-00a4-80a0-9141-280380460926)
